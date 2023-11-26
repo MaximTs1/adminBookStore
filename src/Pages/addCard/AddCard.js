@@ -1,9 +1,8 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
 import Autocomplete from "@mui/material/Autocomplete";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -11,10 +10,6 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useNavigate, Link } from "react-router-dom";
-import { GeneralContext } from "../../App";
-import Switch from "@mui/material/Switch";
-import { FormControlLabel } from "@mui/material";
 import { structure, authors, signupSchema } from "./addCardStructure";
 import "../Spinner.css";
 import "./AddCard.css";
@@ -41,10 +36,6 @@ const AddCard = () => {
 
   const [errors, setErrors] = useState({});
   const [isValid, setIsValid] = useState(false);
-
-  // const handleChange = (e) => {
-  //   setUserData({ ...userData, [e.target.name]: e.target.value });
-  // };
   const [selectedAuthor, setSelectedAuthor] = useState(null);
 
   const handleAuthorChange = (event, newValue) => {
@@ -54,28 +45,41 @@ const AddCard = () => {
   };
 
   const handleInputChange = (ev) => {
-    const { name, value } = ev.target;
-    const addBookData = {
-      ...bookData,
-      [name]: value,
-    };
+    const { name, value, files } = ev.target;
 
-    setBookData(addBookData);
-
-    const validationResults = signupSchema.validate(addBookData, {
-      abortEarly: true,
-      allowUnknown: true,
-    });
-
-    const newErrors = {};
-
-    validationResults.error?.details.find((error) => {
-      if (error.path && error.path.length > 0 && value.trim() !== "") {
-        newErrors[error.path[0]] = error.message;
+    if (name === "image") {
+      const file = files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64String = reader.result.split(",")[1];
+          setBookData({ ...bookData, image: base64String });
+        };
+        reader.readAsDataURL(file);
       }
-    });
-    setErrors(newErrors);
-    setIsValid(!Object.keys(newErrors).length);
+    } else {
+      const addBookData = {
+        ...bookData,
+        [name]: value,
+      };
+
+      setBookData(addBookData);
+
+      const validationResults = signupSchema.validate(addBookData, {
+        abortEarly: true,
+        allowUnknown: true,
+      });
+
+      const newErrors = {};
+
+      validationResults.error?.details.find((error) => {
+        if (error.path && error.path.length > 0 && value.trim() !== "") {
+          newErrors[error.path[0]] = error.message;
+        }
+      });
+      setErrors(newErrors);
+      setIsValid(!Object.keys(newErrors).length);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -102,7 +106,11 @@ const AddCard = () => {
       <div className="Frame">
         <div className="CardPreview">
           {bookData.image && (
-            <img src={bookData.image} alt="Preview" className="imagePreview" />
+            <img
+              src={`data:image/jpeg;base64,${bookData.image}`}
+              alt="Preview"
+              className="imagePreview"
+            />
           )}
           <div className="textContainer">
             <div>{bookData.name}</div>
@@ -142,7 +150,16 @@ const AddCard = () => {
                   <Grid container spacing={2}>
                     {structure.map((s) => (
                       <Grid key={s.name} item xs={12} sm={s.block ? 12 : 6}>
-                        {s.label === "author" ? (
+                        {s.type === "file" ? (
+                          // File input for image
+                          <input
+                            type="file"
+                            name={s.name}
+                            onChange={handleInputChange}
+                            required={s.required}
+                          />
+                        ) : s.label === "author" ? (
+                          // Autocomplete for author field
                           <Autocomplete
                             disablePortal
                             options={authors}
@@ -165,6 +182,7 @@ const AddCard = () => {
                             )}
                           />
                         ) : (
+                          // TextField for other text inputs
                           <TextField
                             name={s.name}
                             required={s.required}
@@ -204,9 +222,6 @@ const AddCard = () => {
                   <Grid container justifyContent="center"></Grid>
                 </Box>
               </Box>
-              {/* <button className="BackButton">
-                <Link to={"/"}>🔙</Link>
-              </button> */}
             </Container>
           </ThemeProvider>
         </div>

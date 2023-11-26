@@ -31,7 +31,7 @@ export const structure = [
   },
   {
     name: "image",
-    type: "text",
+    type: "file",
     label: "image",
     required: true,
     block: false,
