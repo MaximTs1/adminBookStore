@@ -1,0 +1,235 @@
+.container {
+  position: fixed;
+}
+
+.container .active {
+  border-right: 4px solid var(--white);
+}
+
+.container .active img {
+  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(103%)
+    contrast(103%);
+}
+
+/* index.css */
+.button {
+  background-color: var(--black);
+  border: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  margin: 0.5rem 0 0 0.5rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.button::before,
+.button::after {
+  content: "";
+  background-color: white !important;
+  height: 2px;
+  width: 1rem;
+  position: absolute;
+  transition: all 0.3s ease;
+}
+
+.button::before {
+  top: 1rem; /* Default position */
+  transform: rotate(0);
+}
+
+.button::after {
+  top: 1.5rem; /* Default position */
+  transform: rotate(0);
+}
+
+.button.clicked::before {
+  top: 1.2rem; /* Position when clicked */
+  transform: rotate(135deg);
+}
+
+.button.clicked::after {
+  top: 1.2rem; /* Position when clicked */
+  transform: rotate(-135deg);
+}
+
+/* index.css */
+.sidebarContainer {
+  background-color: var(--black);
+  width: 3.5rem;
+  height: 80vh;
+  margin-top: 1rem;
+  border-radius: 0 30px 30px 0;
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 20 !important;
+}
+
+.logo {
+  width: 2rem;
+}
+
+.logo img {
+  width: 100%;
+  height: auto;
+}
+
+.slickBar {
+  color: var(--white);
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--black);
+  padding: 2rem 0;
+  position: absolute;
+  top: 6rem;
+  left: 0;
+  width: 3.5rem; /* Default width */
+  transition: all 0.5s ease;
+  border-radius: 0 30px 30px 0;
+}
+
+.slickBar.clicked {
+  width: 12rem; /* Expanded width when clicked */
+}
+
+.slickBar:hover {
+  width: 12rem;
+
+  .text {
+    width: 100%; /* Width when clicked */
+    margin-left: 1.5rem;
+  }
+}
+
+.item {
+  text-decoration: none;
+  color: var(--white);
+  width: 100%;
+  padding: 1rem 0;
+  cursor: pointer;
+  display: flex;
+  padding-left: 1rem;
+}
+
+.item:hover {
+  border-right: 4px solid var(--white);
+}
+
+.item:hover img {
+  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(103%)
+    contrast(103%);
+}
+
+.item img {
+  width: 1.2rem;
+  height: auto;
+  filter: invert(92%) sepia(4%) saturate(1033%) hue-rotate(169deg)
+    brightness(78%) contrast(85%);
+}
+
+.text {
+  width: 0; /* Default width */
+  overflow: hidden;
+  margin-left: 0;
+  transition: all 0.3s ease;
+}
+
+.text.clicked {
+  width: 100%; /* Width when clicked */
+  margin-left: 1.5rem;
+}
+
+.profile {
+  width: 3rem; /* Default width */
+  height: 3rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0;
+  background-color: var(--black);
+  color: var(--white);
+  transition: all 0.3s ease;
+  z-index: 15 !important;
+}
+
+.profile.clicked {
+  width: 14rem; /* Width when clicked */
+  margin-left: 9rem;
+}
+
+.profile img {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.profile img:hover {
+  border: 2px solid var(--grey);
+  padding: 2px;
+}
+
+.details {
+  display: none; /* Default state */
+  justify-content: space-between;
+  align-items: center;
+  z-index: 15 !important;
+}
+
+.details.clicked {
+  display: flex; /* Display when clicked */
+}
+
+.name {
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.name h4 {
+  display: inline-block;
+}
+
+.name a {
+  font-size: 0.8rem;
+  text-decoration: none;
+  color: var(--grey);
+}
+
+.name a:hover {
+  text-decoration: underline;
+}
+
+.logout {
+  border: none;
+  width: 2rem;
+  height: 2rem;
+  background-color: transparent;
+}
+
+.logout img {
+  width: 100%;
+  height: auto;
+  filter: invert(15%) sepia(70%) saturate(6573%) hue-rotate(2deg)
+    brightness(100%) contrast(126%);
+  transition: all 0.3s ease;
+}
+
+.logout img:hover {
+  border: none;
+  padding: 0;
+  opacity: 0.5;
+}

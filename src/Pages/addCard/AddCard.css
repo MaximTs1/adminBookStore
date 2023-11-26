@@ -1,0 +1,156 @@
+/* .home {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+} */
+body {
+  background-color: var(--background) !important;
+}
+
+.home h1 {
+  cursor: pointer;
+}
+
+.Frame {
+  position: fixed;
+  top: 10%; /* Centering the frame with 10% margin on each side */
+  left: 10%;
+  width: 80%; /* 80% of the screen width */
+  min-height: 30%;
+  max-height: 80%; /* 80% of the screen height */
+  background-color: rgb(179, 177, 177);
+  z-index: 10; /* Ensure it's above other content */
+  border: 1px solid #000; /* Optional border for visibility */
+  border-radius: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px; /* Add padding inside the frame */
+  overflow: auto;
+}
+
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  max-width: 50%;
+  height: 80%;
+  flex-grow: 1;
+  text-align: center;
+  margin-right: 2vw;
+  background-color: white;
+  margin: auto;
+  border: 1px solid #000; /* Optional border for visibility */
+  border-radius: 20px;
+}
+
+.styledInput {
+  margin: 10px 0 15px 15px; /* Spacing between inputs */
+  padding: 8px 15px; /* Padding inside each input */
+  border-radius: 5px; /* Rounded edges for inputs */
+  border: 1px solid #ccc; /* Border for inputs */
+  width: 100%; /* Width of the inputs */
+  max-width: 300px; /* Maximum width */
+}
+
+.sendButton {
+  margin: 10px auto;
+  padding: 8px 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  display: block;
+  width: fit-content;
+}
+
+.CardPreview {
+  width: 20vw; /* Width of the green box */
+  height: 60vh; /* Height of the green box */
+  background-color: white; /* Background color */
+  margin-right: 10px; /* Margin to separate it from the form */
+  padding: 10px; /* Add padding for inner content */
+  overflow: auto; /* In case the text overflows */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #000; /* Optional border for visibility */
+  border-radius: 20px;
+}
+
+.imagePreview {
+  width: 100%; /* Adjust as needed */
+  height: 70%; /* Half of the cardPreview */
+  object-fit: fill; /* Adjust how the image fits */
+}
+
+.CardPreview div {
+  /* Add styles for each line of text here */
+  margin-bottom: 5px; /* Example: Add some space between lines */
+}
+
+.textContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content horizontally */
+  justify-content: center; /* Center content vertically */
+  height: 40%; /* Take up the bottom half of the green box */
+  width: 100%; /* Use the full width of the green box */
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: space-around; /* Space out the buttons */
+  align-items: center;
+  padding: 10px 0; /* Add some padding at the top and bottom */
+}
+
+.cartButton,
+.buyButton {
+  padding: 8px 15px; /* Adjust as needed */
+  margin: 5px; /* Space between buttons */
+  border-radius: 5px; /* Rounded corners */
+  border: 1px solid #ccc; /* Border color */
+  cursor: pointer;
+  /* background-color: #f5f5f5; */
+  /* Add more styles as needed */
+}
+
+.styledTextarea {
+  width: 100%; /* Adjust width as needed */
+  max-width: 700px; /* Or whatever maximum width you prefer */
+  min-height: 100px; /* Adjust minimum height as needed */
+  padding: 8px 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin: 10px 0;
+  resize: vertical; /* Allow vertical resizing, you can set it to 'none' if you don't want resizing */
+  /* Add other styles as per your form design */
+}
+
+/* p {
+  font-size: calc(2rem + 2vw);
+  background: linear-gradient(to right, rgb(87, 167, 90) 30%, #445ab0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+} */
+
+.BackButton {
+  position: fixed;
+  bottom: 100px;
+  right: 30px;
+  border: none;
+  padding: 0;
+}
+.BackButton a {
+  color: white;
+  padding: 0px;
+  font-size: 45px;
+  text-decoration: none !important;
+  padding: 0;
+}

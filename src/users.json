@@ -1,0 +1,52 @@
+{
+  "users": [
+    {
+      "firstName": "John",
+      "lastName": "Doe",
+      "email": "john.doe@example.com",
+      "phone": "123-456-7890"
+    },
+    {
+      "firstName": "Jane",
+      "lastName": "Doe",
+      "email": "jane.doe@example.com",
+      "phone": "098-765-4321"
+    },
+    {
+      "firstName": "maxim",
+      "lastName": "tsvetkov",
+      "email": "maxim.tsvetkov@example.com",
+      "phone": "123-456-7890"
+    },
+    {
+      "firstName": "abc",
+      "lastName": "def",
+      "email": "abc.def@example.com",
+      "phone": "098-765-4321"
+    },
+    {
+      "firstName": "beni",
+      "lastName": "Doe",
+      "email": "john.doe@example.com",
+      "phone": "123-456-7890"
+    },
+    {
+      "firstName": "meni",
+      "lastName": "Doe",
+      "email": "jane.doe@example.com",
+      "phone": "098-765-4321"
+    },
+    {
+      "firstName": "mor",
+      "lastName": "Doe",
+      "email": "john.doe@example.com",
+      "phone": "123-456-7890"
+    },
+    {
+      "firstName": "Jane",
+      "lastName": "Doe",
+      "email": "jane.doe@example.com",
+      "phone": "098-765-4321"
+    }
+  ]
+}
