@@ -5,6 +5,7 @@ const router = express.Router();
 const User = require("./models/User");
 const authGuard = require("./auth-guard");
 const { JWT_SECRET, getUser } = require("./config");
+const Counter = require("./models/Counter");
 
 // GET all users weithout authguard
 router.get("/all-users", async (req, res) => {
@@ -28,28 +29,23 @@ router.get("/login", authGuard, async (req, res) => {
 
 //ADD user
 router.post("/signup", async (req, res) => {
+  const countDocument = await Counter.findByIdAndUpdate(
+    { _id: "userId" },
+    { $inc: { seq: 1 } },
+    { new: true, upsert: true }
+  );
   try {
-    const {
-      firstName,
-      lastName,
-      phone,
-      email,
-      password,
-      city,
-      street,
-      houseNumber,
-      zip,
-    } = req.body;
     const user = new User({
-      firstName,
-      lastName,
-      phone,
-      email,
-      password: await bcrypt.hash(password, 10),
-      city,
-      street,
-      houseNumber,
-      zip,
+      customId: countDocument.seq,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      phone: req.body.phone,
+      email: req.body.email,
+      password: await bcrypt.hash(req.body.password, 10),
+      city: req.body.city,
+      street: req.body.street,
+      houseNumber: req.body.houseNumber,
+      zip: req.body.zip
     });
 
     const newUser = await user.save();
@@ -89,5 +85,25 @@ router.post("/login", async (req, res) => {
 });
 
 router.get("/logout", async (req, res) => {});
+
+  router.put("/get-user-info/:customId", async (req, res) => {
+    try {
+      const { customId } = req.params;
+      const updatedData = req.body;
+  
+      const updatedUser = await User.findOneAndUpdate({ customId }, updatedData, {
+        new: true, // Return the updated document
+      });
+  
+      if (!updatedUser) {
+        return res.status(404).send("User not found");
+      }
+  
+      res.json(updatedUser);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error updating user");
+    }
+  });
 
 module.exports = router;
