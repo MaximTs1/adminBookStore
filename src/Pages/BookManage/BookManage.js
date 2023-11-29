@@ -10,7 +10,7 @@ import { TextField } from "@mui/material";
 
 const BookManage = () => {
   const [cards, setCards] = useState([]);
-  const [book, setBook] = useState(null); // State to store the fetched book
+  const [book, setBook] = useState(""); // State to store the fetched book
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const navigate = useNavigate();
@@ -63,9 +63,10 @@ const BookManage = () => {
         return response.json();
       })
       .then((book) => {
-        console.log("Book:", book);
-        setBook(book);
-        navigate("/editCard", { state: { book } });
+        const { image, ...bookWithoutImage } = book;
+        setBook(bookWithoutImage);
+        console.log("bookWithoutImage:", bookWithoutImage);
+        navigate("/editCard", { state: { book: bookWithoutImage } });
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -112,7 +113,7 @@ const BookManage = () => {
           label="Search"
           variant="outlined"
           onChange={handleSearchChange}
-          sx={{ mb: 2 }}
+          sx={{ mb: -4, mt: 1 }}
         />
       </div>
       <div className="Cardframe">
@@ -120,7 +121,12 @@ const BookManage = () => {
           <div key={c.customId} className="Card3">
             <div
               className="img"
-              style={{ backgroundImage: `url(${c.image})`, border: "0" }}
+              style={{
+                backgroundImage: c.image.includes("/9j")
+                  ? `url("data:image/jpeg;base64,${c.image}")` // Correctly concatenate the base64 string
+                  : `url(${c.image})`,
+                border: "0",
+              }}
             ></div>
             <h1>{c.title}</h1>
             <div className="my-p">
@@ -140,15 +146,6 @@ const BookManage = () => {
             <div className="myIcons">
               <div className="icons1">
                 <span> </span>
-
-                {/* <Link to={{ pathname: "/editCard", state: { book: book } }}>
-                    <span className="Expand">
-                      <FaRegEdit
-                        size={26}
-                        onClick={(ev) => fetchBookByCustomId(c.customId)}
-                      />
-                    </span>
-                  </Link> */}
                 <span
                   className="Expand"
                   onClick={() => fetchBookByCustomId(c.customId)}

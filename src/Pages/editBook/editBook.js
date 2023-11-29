@@ -26,31 +26,32 @@ const EditBook = () => {
   const location = useLocation();
   const bookFromLocation = location.state?.book;
 
-  const [bookData, setBookData] = useState(
-    bookFromLocation || {
-      customId: "",
-      name: "",
-      author: "",
-      category: "",
-      price: "",
-      image: "",
-      condition: "",
-      book_parts: "",
-      stock: "",
-      hand: "",
-      publishing_year: "",
-      translation: "",
-      publisher: "",
-      description: "",
+  const [bookData, setBookData] = useState(() => {
+    if (bookFromLocation) {
+      const { image, ...restOfBook } = bookFromLocation; // Destructure to exclude 'image'
+      return { ...restOfBook, image: "" }; // Spread the rest of the properties and set 'image' to ""
+    } else {
+      return {
+        customId: "",
+        name: "",
+        author: "",
+        category: "",
+        price: "",
+        image: "",
+        condition: "",
+        book_parts: "",
+        stock: "",
+        hand: "",
+        publishing_year: "",
+        translation: "",
+        publisher: "",
+        description: "",
+      };
     }
-  );
+  });
 
   const [errors, setErrors] = useState({});
   const [isValid, setIsValid] = useState(false);
-
-  // const handleChange = (e) => {
-  //   setUserData({ ...userData, [e.target.name]: e.target.value });
-  // };
   const [selectedAuthor, setSelectedAuthor] = useState(null);
 
   const handleAuthorChange = (event, newValue) => {
@@ -60,54 +61,42 @@ const EditBook = () => {
   };
 
   const handleInputChange = (ev) => {
-    const { name, value } = ev.target;
-    setBookData({ ...bookData, [name]: value });
-    // The actual validation will now be handled by useEffect
-  };
+    const { name, value, files } = ev.target;
 
-  //   const handleInputChange = (ev) => {
-  //     const { name, value } = ev.target;
-  //     const addBookData = {
-  //       ...bookData,
-  //       [name]: value,
-  //     };
+    if (name === "image") {
+      const file = files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64String = reader.result.split(",")[1];
+          setBookData({ ...bookData, image: base64String });
+        };
+        reader.readAsDataURL(file);
+      }
+    } else {
+      const addBookData = {
+        ...bookData,
+        [name]: value,
+      };
 
-  //     setBookData(addBookData);
+      setBookData(addBookData);
 
-  useEffect(() => {
-    const validationResults = signupSchema.validate(bookData, {
-      abortEarly: false, // To get all errors in the schema, not just the first one
-      allowUnknown: true,
-    });
+      const validationResults = signupSchema.validate(addBookData, {
+        abortEarly: true,
+        allowUnknown: true,
+      });
 
-    const newErrors = {};
-    if (validationResults.error) {
-      validationResults.error.details.forEach((error) => {
-        if (error.path && error.path.length > 0) {
+      const newErrors = {};
+
+      validationResults.error?.details.find((error) => {
+        if (error.path && error.path.length > 0 && value.trim() !== "") {
           newErrors[error.path[0]] = error.message;
         }
       });
+      setErrors(newErrors);
+      setIsValid(!Object.keys(newErrors).length);
     }
-
-    setErrors(newErrors);
-    setIsValid(Object.keys(newErrors).length === 0);
-  }, [bookData]);
-
-  //     const validationResults = signupSchema.validate(addBookData, {
-  //       abortEarly: true,
-  //       allowUnknown: true,
-  //     });
-
-  //     const newErrors = {};
-
-  //     validationResults.error?.details.find((error) => {
-  //       if (error.path && error.path.length > 0 && value.trim() !== "") {
-  //         newErrors[error.path[0]] = error.message;
-  //       }
-  //     });
-  //     setErrors(newErrors);
-  //     setIsValid(!Object.keys(newErrors).length);
-  //   };
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -130,10 +119,8 @@ const EditBook = () => {
 
       const updatedBook = await response.json();
       console.log("Updated Book:", updatedBook);
-      // Handle success - maybe navigate back to the book list or show a success message
     } catch (error) {
       console.error("Error:", error);
-      // Handle the error - maybe show an error message to the user
     }
   };
 
@@ -141,8 +128,13 @@ const EditBook = () => {
     <div className="home">
       <div className="Frame">
         <div className="CardPreview">
-          <img src={bookData.image} alt="Preview" className="imagePreview" />
-
+          {bookData.image && (
+            <img
+              src={`data:image/jpeg;base64,${bookData.image}`}
+              alt="Preview"
+              className="imagePreview"
+            />
+          )}
           <div className="textContainer">
             <div>{bookData.name}</div>
             <div>{bookData.author}</div>
@@ -181,7 +173,14 @@ const EditBook = () => {
                   <Grid container spacing={2}>
                     {structure.map((s) => (
                       <Grid key={s.name} item xs={12} sm={s.block ? 12 : 6}>
-                        {s.label === "author" ? (
+                        {s.type === "file" ? (
+                          <input
+                            type="file"
+                            name={s.name}
+                            onChange={handleInputChange}
+                            required={s.required}
+                          />
+                        ) : s.label === "author" ? (
                           <Autocomplete
                             disablePortal
                             options={authors}
@@ -206,7 +205,7 @@ const EditBook = () => {
                         ) : (
                           <TextField
                             name={s.name}
-                            value={bookData[s.name]} // Dynamically access the property in bookData
+                            value={bookData[s.name]}
                             required={s.required}
                             fullWidth
                             id={s.name}
@@ -244,9 +243,6 @@ const EditBook = () => {
                   <Grid container justifyContent="center"></Grid>
                 </Box>
               </Box>
-              {/* <button className="BackButton">
-                <Link to={"/"}>🔙</Link>
-              </button> */}
             </Container>
           </ThemeProvider>
         </div>

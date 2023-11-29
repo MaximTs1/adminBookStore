@@ -54,45 +54,25 @@ const UserManage = () => {
           error
         );
       });
-    // .finally(() => ;
   }, []);
-
-  // const handleEditClick = (user) => {
-  //   // Implement your logic here
-  //   // For example, you could open an edit form or redirect to an edit page
-  //   alert("Edit clicked for user:", user);
-  // };
-
-  // const fetchData = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       "http://185.229.226.27:3001/api/your-endpoint"
-  //     );
-  //     setUsers(response.data); // Update the state with the fetched data
-  //   } catch (error) {
-  //     console.error("There was an error fetching the data:", error);
-  //     alert(
-  //       error.response?.data?.message || "There was an error fetching the data."
-  //     );
-  //   }
-  // };
-
-  // // useEffect to call fetchData when the component mounts
-  // useEffect(() => {
-  //   fetchData();
-  // }, []); // The empty array ensures the effect runs only once
-
-  // ...
 
   return (
     <div className="Usersframe">
       <p>Users Manage</p>
-      <TextField
-        label="Search"
-        variant="outlined"
-        onChange={handleSearchChange}
-        sx={{ mb: 2 }}
-      />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <TextField
+          label="Search"
+          variant="outlined"
+          onChange={handleSearchChange}
+          sx={{ mb: 1, mt: 2 }}
+        />
+      </div>
       <TableContainer
         component={Paper}
         sx={{ maxWidth: "100%", overflowX: "auto", mb: 1, mt: 2 }}
@@ -107,20 +87,15 @@ const UserManage = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredData.map(
-              (
-                user,
-                index // Use filteredData here
-              ) => (
-                <TableRow key={index}>
-                  {Object.entries(user)
-                    .filter(([key, _]) => key !== "_id" && key !== "__v")
-                    .map(([key, value], cellIndex) => (
-                      <TableCell key={cellIndex}>{value.toString()}</TableCell>
-                    ))}
-                </TableRow>
-              )
-            )}
+            {filteredData.map((user, index) => (
+              <TableRow key={index}>
+                {Object.entries(user)
+                  .filter(([key, _]) => key !== "_id" && key !== "__v")
+                  .map(([key, value], cellIndex) => (
+                    <TableCell key={cellIndex}>{value.toString()}</TableCell>
+                  ))}
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
