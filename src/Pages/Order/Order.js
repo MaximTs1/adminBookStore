@@ -13,12 +13,12 @@ const Order = () => {
             <div className="order-section">
               <div className="order-info-details">
                 <div className="order-info-part">
-                  {/* Content for part 1 here */}
                   <h2>Order info</h2>
                 </div>
                 <div className="order-info-part">
-                  {/* Content for part 2 here */}
-                  <h3>Order info</h3>
+                  <h3>timePlaced:</h3>
+                  <h3>orderNumber:</h3>
+                  <h3>total:</h3>
                 </div>
                 <div className="order-info-part">
                   {/* Content for part 3 here */}

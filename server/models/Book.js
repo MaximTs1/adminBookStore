@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-// Define the Book schema
 const bookSchema = new mongoose.Schema({
   customId: { type: Number, required: true, unique: true },
   name: String,
@@ -18,7 +17,6 @@ const bookSchema = new mongoose.Schema({
   description: String,
 });
 
-// Create a model based on the schema
 const Book = mongoose.model("Book", bookSchema);
 
 module.exports = Book;

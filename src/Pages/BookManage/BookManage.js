@@ -1,21 +1,35 @@
 import React from "react";
 import { useState, useContext, useEffect } from "react";
 import "./bookManage.css";
-
-// import './Cards.css'
-// import './CardEffects.css'
-// import './Title.css'
 import { FaRegEdit } from "react-icons/fa";
 import { BsFillHeartFill, BsFillTrash3Fill } from "react-icons/bs";
 import { AiOutlineExpand } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import { GeneralContext } from "../../App";
+import { TextField } from "@mui/material";
 
 const BookManage = () => {
   const [cards, setCards] = useState([]);
   const [book, setBook] = useState(null); // State to store the fetched book
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
   const navigate = useNavigate();
   const { setLoader, snackbar } = useContext(GeneralContext);
+
+  const handleSearchChange = (event) => {
+    const query = event.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    const filtered = cards.filter(
+      (card) =>
+        query === "" ||
+        card.name.toLowerCase().includes(query) ||
+        card.author.toLowerCase().includes(query) ||
+        card.publisher.toLowerCase().includes(query)
+    );
+
+    setFilteredData(filtered);
+  };
 
   useEffect(() => {
     setLoader(true);
@@ -28,6 +42,7 @@ const BookManage = () => {
       })
       .then((data) => {
         setCards(data);
+        setFilteredData(data);
       })
       .catch((error) => {
         console.error(
@@ -73,26 +88,35 @@ const BookManage = () => {
         return response.json();
       })
       .then((data) => {
-        console.log("Delete Response:", data);
-        // Handle success - maybe refresh the list of books or navigate away
+        window.location.reload();
       })
       .catch((error) => {
         console.error("Error:", error);
-        // Handle the error - maybe show an error message to the user
       })
       .finally(() => setLoader(false));
   };
 
   return (
     <div className="mainDiv">
-      <p>Book Manage</p>
-
       <span className="title8">
-        <h1>Cardify+</h1>
-        <p>Here are some Cards from our Clients around the world </p>
+        <h1>Books</h1>
       </span>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <TextField
+          label="Search"
+          variant="outlined"
+          onChange={handleSearchChange}
+          sx={{ mb: 2 }}
+        />
+      </div>
       <div className="Cardframe">
-        {cards.map((c) => (
+        {filteredData.map((c) => (
           <div key={c.customId} className="Card3">
             <div
               className="img"
