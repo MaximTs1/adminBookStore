@@ -1,0 +1,164 @@
+.OrderFrame {
+  /* position: fixed; */
+  top: 10%;
+  left: 10%;
+  right: 10%;
+  bottom: 10%;
+  height: 80vh;
+  width: 80vw; /* 80% of the screen width */
+  min-height: 30%;
+  max-height: 80%; /* 80% of the screen height */
+  background-color: rgb(179, 177, 177);
+  border: 1px solid #000;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start; /* Start items at the top of the container */
+  justify-content: space-between;
+  padding: 20px;
+  overflow: auto;
+  z-index: -1;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+.order-page {
+  display: flex; /* Using flex to layout the header and content */
+  flex-direction: column; /* Stack header and content vertically */
+  width: 100%;
+  height: 100%;
+}
+
+.order-header {
+  text-align: left;
+  margin-bottom: 10px;
+  margin-left: 50px;
+}
+
+.order-content {
+  display: flex;
+  justify-content: space-between;
+  height: calc(
+    100% - 40px
+  ); /* Subtracting the top and bottom padding of .Frame */
+  width: 100%; /* Fit to the width of .Frame */
+  flex-grow: 1; /* Allow content to fill the space */
+}
+
+.order-info-frame {
+  width: 55%;
+  display: flex; /* Display as flex container */
+  flex-direction: column; /* Stack children vertically */
+  background-color: #f6f6f6;
+  padding: 10px;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.order-aside-frame {
+  width: 25%;
+  display: flex; /* Display as flex container */
+  flex-direction: column; /* Stack children vertically */
+  background-color: #f6f6f6;
+  padding: 10px;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.order-section {
+  flex: 1; /* Each section takes equal space */
+  display: flex;
+  flex-direction: column; /* Stack content of section vertically */
+  justify-content: center; /* Center content vertically */
+  padding: 10px;
+  box-sizing: border-box;
+  margin-bottom: 20px; /* Add some space between sections */
+}
+
+.order-section:last-child {
+  margin-bottom: 0; /* Remove bottom margin for last section */
+}
+
+.order-section h3 {
+  margin-right: 20px;
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .Frame {
+    flex-direction: column;
+    top: 5%;
+    left: 5%;
+    right: 5%;
+    bottom: 5%;
+    padding: 10px;
+  }
+  .order-content {
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+  }
+  .order-info-frame,
+  .order-aside-frame {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .order-section {
+    margin-bottom: 10px;
+  }
+}
+
+.order-info-details {
+  display: flex; /* Enable flex layout */
+}
+
+.order-info-part {
+  flex: 1; /* Each part takes equal space */
+  padding: 10px; /* Adjust padding as needed */
+  box-sizing: border-box; /* Include padding in width calculation */
+  /* Add more styling as needed */
+}
+
+.delivery-progress {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.progress-stage {
+  flex: 1;
+  text-align: center;
+  position: relative;
+  padding-top: 15px; /* Space for the line */
+}
+
+.progress-stage::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 10px;
+  background-color: grey; /* Default color */
+  border-radius: 50%;
+}
+
+.progress-stage.completed::before {
+  background-color: green; /* Color for completed stages */
+}
+
+.progress-stage:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: calc(50% + 5px);
+  width: calc(100% - 5px);
+  height: 2px;
+  background-color: grey; /* Default color */
+  z-index: -1;
+}
+
+.progress-stage.completed:not(:last-child)::after {
+  background-color: green; /* Color for completed stages */
+}

@@ -304,7 +304,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="frame">
+    <div className="Homeframe">
       <Stack
         direction="column"
         spacing={2}

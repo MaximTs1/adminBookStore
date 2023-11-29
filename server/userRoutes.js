@@ -6,8 +6,8 @@ const User = require("./models/User");
 const authGuard = require("./auth-guard");
 const { JWT_SECRET, getUser } = require("./config");
 
-// GET all users
-router.get("/all-users", authGuard, async (req, res) => {
+// GET all users weithout authguard
+router.get("/all-users", async (req, res) => {
   try {
     // Fetch all users from the database
     const users = await User.find({}).select("-password"); // Exclude passwords from the result

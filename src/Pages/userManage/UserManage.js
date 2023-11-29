@@ -18,23 +18,44 @@ import axios from "axios";
 const UserManage = () => {
   const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredData, setFilteredData] = useState(usersData);
+  const [filteredData, setFilteredData] = useState([]);
 
   const handleSearchChange = (event) => {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
 
-    const filtered = usersData.filter(
+    const filtered = users.filter(
       (user) =>
         query === "" ||
         user.firstName.toLowerCase().includes(query) ||
         user.lastName.toLowerCase().includes(query) ||
-        user.companyName.toLowerCase().includes(query) ||
         user.email.toLowerCase().includes(query)
     );
 
     setFilteredData(filtered);
   };
+
+  useEffect(() => {
+    fetch("http://185.229.226.27:3001/user/all-users")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setUsers(data);
+        setFilteredData(data);
+        console.log("data:", data);
+      })
+      .catch((error) => {
+        console.error(
+          "There has been a problem with your fetch operation:",
+          error
+        );
+      });
+    // .finally(() => ;
+  }, []);
 
   // const handleEditClick = (user) => {
   //   // Implement your logic here
@@ -61,14 +82,16 @@ const UserManage = () => {
   //   fetchData();
   // }, []); // The empty array ensures the effect runs only once
 
+  // ...
+
   return (
-    <div className="frame">
+    <div className="Usersframe">
       <p>Users Manage</p>
       <TextField
         label="Search"
         variant="outlined"
         onChange={handleSearchChange}
-        sx={{ mb: 2 }} // Add some margin
+        sx={{ mb: 2 }}
       />
       <TableContainer
         component={Paper}
@@ -77,19 +100,27 @@ const UserManage = () => {
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              {Object.keys(usersData[0]).map((key) => (
-                <TableCell key={key}>{key}</TableCell> // Use the key as the header
-              ))}
+              {users[0] &&
+                Object.keys(users[0])
+                  .filter((key) => key !== "_id" && key !== "__v")
+                  .map((key) => <TableCell key={key}>{key}</TableCell>)}
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredData.map((user, index) => (
-              <TableRow key={index}>
-                {Object.values(user).map((value, cellIndex) => (
-                  <TableCell key={cellIndex}>{value}</TableCell>
-                ))}
-              </TableRow>
-            ))}
+            {filteredData.map(
+              (
+                user,
+                index // Use filteredData here
+              ) => (
+                <TableRow key={index}>
+                  {Object.entries(user)
+                    .filter(([key, _]) => key !== "_id" && key !== "__v")
+                    .map(([key, value], cellIndex) => (
+                      <TableCell key={cellIndex}>{value.toString()}</TableCell>
+                    ))}
+                </TableRow>
+              )
+            )}
           </TableBody>
         </Table>
       </TableContainer>

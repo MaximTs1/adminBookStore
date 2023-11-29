@@ -1,10 +1,10 @@
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import Home from "./Pages/Home/Home";
-import UserManage from "./Pages/userManage/UserManage";
 import AddCard from "./Pages/addCard/AddCard";
+import UserManage from "./Pages/userManage/UserManage";
 import BookManage from "./Pages/BookManage/BookManage";
-import Projects from "./Pages/Projects/Projects";
+import Order from "./Pages/Order/Order";
 import Login from "./Pages/LoginPage/Login";
 import EditBook from "./Pages/editBook/editBook";
 
@@ -46,10 +46,10 @@ export default function Router() {
         }
       />
       <Route
-        path="/projects"
+        path="/Order"
         element={
           <ProtectedRoute>
-            <Projects />
+            <Order />
           </ProtectedRoute>
         }
       />

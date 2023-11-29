@@ -84,40 +84,40 @@ const BookManage = () => {
   };
 
   return (
-    <div className="frame">
+    <div className="mainDiv">
       <p>Book Manage</p>
-      <div className="mainDiv">
-        <span className="title8">
-          <h1>Cardify+</h1>
-          <p>Here are some Cards from our Clients around the world </p>
-        </span>
-        <div className="Cardframe">
-          {cards.map((c) => (
-            <div key={c.customId} className="Card3">
-              <div
-                className="img"
-                style={{ backgroundImage: `url(${c.image})`, border: "0" }}
-              ></div>
-              <h1>{c.title}</h1>
-              <div className="my-p">
-                <p>
-                  <b>Phone:</b>
-                  {c.name}
-                </p>
-                <p>
-                  <b>Adress:</b> {c.houseNumber} {c.street} <br /> {c.country},{" "}
-                  {c.author} {c.category}
-                </p>
-                <p>
-                  <b>Card Number:</b>
-                  {c.customId}
-                </p>
-              </div>
-              <div className="myIcons">
-                <div className="icons1">
-                  <span> </span>
 
-                  {/* <Link to={{ pathname: "/editCard", state: { book: book } }}>
+      <span className="title8">
+        <h1>Cardify+</h1>
+        <p>Here are some Cards from our Clients around the world </p>
+      </span>
+      <div className="Cardframe">
+        {cards.map((c) => (
+          <div key={c.customId} className="Card3">
+            <div
+              className="img"
+              style={{ backgroundImage: `url(${c.image})`, border: "0" }}
+            ></div>
+            <h1>{c.title}</h1>
+            <div className="my-p">
+              <p>
+                <b>Phone:</b>
+                {c.name}
+              </p>
+              <p>
+                <b>Adress:</b> {c.houseNumber} {c.street} <br /> {c.country},{" "}
+                {c.author} {c.category}
+              </p>
+              <p>
+                <b>Card Number:</b>
+                {c.customId}
+              </p>
+            </div>
+            <div className="myIcons">
+              <div className="icons1">
+                <span> </span>
+
+                {/* <Link to={{ pathname: "/editCard", state: { book: book } }}>
                     <span className="Expand">
                       <FaRegEdit
                         size={26}
@@ -125,30 +125,29 @@ const BookManage = () => {
                       />
                     </span>
                   </Link> */}
-                  <span
-                    className="Expand"
-                    onClick={() => fetchBookByCustomId(c.customId)}
-                  >
-                    <FaRegEdit size={26} />
+                <span
+                  className="Expand"
+                  onClick={() => fetchBookByCustomId(c.customId)}
+                >
+                  <FaRegEdit size={26} />
+                </span>
+                <Link to={`/cards/${c.customId}`}>
+                  <span className="Expand">
+                    <AiOutlineExpand size={26} />
                   </span>
-                  <Link to={`/cards/${c.customId}`}>
-                    <span className="Expand">
-                      <AiOutlineExpand size={26} />
-                    </span>
-                  </Link>
-                </div>
-                <div className="sep"></div>
-                <div className="icons2">
-                  <BsFillTrash3Fill
-                    className="Trash"
-                    size={26}
-                    onClick={(ev) => deleteBookByCustomId(c.customId)}
-                  />
-                </div>
+                </Link>
+              </div>
+              <div className="sep"></div>
+              <div className="icons2">
+                <BsFillTrash3Fill
+                  className="Trash"
+                  size={26}
+                  onClick={(ev) => deleteBookByCustomId(c.customId)}
+                />
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );

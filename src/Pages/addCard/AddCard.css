@@ -15,14 +15,14 @@ body {
 }
 
 .Frame {
-  position: fixed;
+  /* position: fixed; */
   top: 10%; /* Centering the frame with 10% margin on each side */
   left: 10%;
-  width: 80%; /* 80% of the screen width */
+  width: 80vw; /* 80% of the screen width */
   min-height: 30%;
   max-height: 80%; /* 80% of the screen height */
   background-color: rgb(179, 177, 177);
-  z-index: 10; /* Ensure it's above other content */
+  z-index: -1; /* Ensure it's above other content */
   border: 1px solid #000; /* Optional border for visibility */
   border-radius: 20px;
   display: flex;

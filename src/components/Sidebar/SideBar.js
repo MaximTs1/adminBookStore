@@ -78,12 +78,12 @@ const Sidebar = () => {
           </NavLink>
 
           <NavLink
-            to="/projects"
+            to="/Order"
             className={({ isActive }) => getNavLinkClass(isActive)}
             onClick={() => setClick(false)}
           >
-            <img src={Projects} alt="Projects" />
-            <span className={`text ${click ? "clicked" : ""}`}>Projects</span>
+            <img src={Projects} alt="Order" />
+            <span className={`text ${click ? "clicked" : ""}`}>Order</span>
           </NavLink>
         </ul>
 
