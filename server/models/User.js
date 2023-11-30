@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema(
     street: String,
     houseNumber: Number,
     zip: Number,
+    likedBooks: [Boolean],
   },
   { collection: "users" }
 );

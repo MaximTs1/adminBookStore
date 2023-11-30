@@ -45,7 +45,8 @@ router.post("/signup", async (req, res) => {
       city: req.body.city,
       street: req.body.street,
       houseNumber: req.body.houseNumber,
-      zip: req.body.zip
+      zip: req.body.zip,
+      likeBooks: [],
     });
 
     const newUser = await user.save();
@@ -86,24 +87,24 @@ router.post("/login", async (req, res) => {
 
 router.get("/logout", async (req, res) => {});
 
-  router.put("/get-user-info/:customId", async (req, res) => {
-    try {
-      const { customId } = req.params;
-      const updatedData = req.body;
-  
-      const updatedUser = await User.findOneAndUpdate({ customId }, updatedData, {
-        new: true, // Return the updated document
-      });
-  
-      if (!updatedUser) {
-        return res.status(404).send("User not found");
-      }
-  
-      res.json(updatedUser);
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Error updating user");
+router.put("/get-user-info/:customId", async (req, res) => {
+  try {
+    const { customId } = req.params;
+    const updatedData = req.body;
+
+    const updatedUser = await User.findOneAndUpdate({ customId }, updatedData, {
+      new: true, // Return the updated document
+    });
+
+    if (!updatedUser) {
+      return res.status(404).send("User not found");
     }
-  });
+
+    res.json(updatedUser);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error updating user");
+  }
+});
 
 module.exports = router;
