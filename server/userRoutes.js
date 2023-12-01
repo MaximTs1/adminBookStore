@@ -51,7 +51,7 @@ router.post("/signup", async (req, res) => {
 
     const newUser = await user.save();
     delete newUser.password;
-    res.status(201).send({ message: "User added successfully" });
+    res.send(newUser);
   } catch (error) {
     console.error(error); // Log the error
     res.status(500).send("Error registering user");
@@ -88,22 +88,77 @@ router.post("/login", async (req, res) => {
 router.get("/logout", async (req, res) => {});
 
 router.put("/get-user-info/:customId", async (req, res) => {
+  // try {
+  //   const { customId } = req.params;
+  //   const updatedData = req.body;
+  //   const updatedUser = await User.findOneAndUpdate({ customId }, updatedData, {
+  //     new: true, // Return the updated document
+  //   });
+  //   if (!updatedUser) {
+  //     return res.status(404).send("User not found");
+  //   }
+  //   res.json(updatedUser);
+  // } catch (error) {
+  //   console.error(error);
+  //   res.status(500).send("Error updating user");
+  // }
   try {
     const { customId } = req.params;
-    const updatedData = req.body;
+    const {
+      firstName,
+      lastName,
+      phone,
+      email,
+      password,
+      city,
+      street,
+      houseNumber,
+      zip,
+    } = req.body;
 
-    const updatedUser = await User.findOneAndUpdate({ customId }, updatedData, {
-      new: true, // Return the updated document
-    });
+    const user = await User.findOne({ customId });
 
-    if (!updatedUser) {
-      return res.status(404).send("User not found");
+    if (!user) {
+      return res.status(404).send("User not found!");
     }
 
-    res.json(updatedUser);
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.phone = phone;
+    user.email = email;
+    user.password = await bcrypt.hash(password, 10);
+    user.city = city;
+    user.street = street;
+    user.houseNumber = houseNumber;
+    user.zip = zip;
+
+    await user.save();
+
+    res.json(user);
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error updating user");
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.put("/update-likedBooks/:customId", async (req, res) => {
+  try {
+    const { customId } = req.params;
+    const { likedBooks } = req.body;
+
+    const user = await User.findOne({ customId });
+    if (!user) {
+      return res.status(404).send("User not found!");
+    }
+
+    user.likedBooks = likedBooks;
+    await user.save();
+
+    const updatedUserInfo = { likedBooks: user.likedBooks };
+    res.json(updatedUserInfo);
+  } catch (error) {
+    console.error("Error in update-likedBooks route:", error); // Log the specific error
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
