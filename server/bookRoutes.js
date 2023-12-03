@@ -16,7 +16,7 @@ router.get("/get-books", async (req, res) => {
   }
 });
 
-// GET a single book by ID
+// ADD a single book
 router.post("/add-book", async (req, res) => {
   try {
     const countDocument = await Counter.findByIdAndUpdate(
@@ -142,5 +142,26 @@ router.post("/login-manager", async (req, res) => {
     res.status(401).send("Invalid login credentials");
   }
 });
+
+router.post('/update-stock', async (req, res) => {
+  try {
+      const purchasedItems = req.body; 
+
+      // Update stock for each purchased item
+      await Promise.all(purchasedItems.map(item => {
+          return Book.findOneAndUpdate(
+              { customId: item.customId },
+              { $inc: { stock: - item.amount } },
+              { new: true }
+          );
+      }));
+
+      res.status(200).send('Stock updated successfully');
+  } catch (error) {
+      console.error("Error updating stock: ", error);
+      res.status(500).send('Error updating stock');
+  }
+});
+
 
 module.exports = router;

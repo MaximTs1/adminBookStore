@@ -46,7 +46,8 @@ router.post("/signup", async (req, res) => {
       street: req.body.street,
       houseNumber: req.body.houseNumber,
       zip: req.body.zip,
-      likeBooks: [],
+      likedBooks: [],
+      orderHistory: []
     });
 
     const newUser = await user.save();
@@ -88,20 +89,6 @@ router.post("/login", async (req, res) => {
 router.get("/logout", async (req, res) => {});
 
 router.put("/get-user-info/:customId", async (req, res) => {
-  // try {
-  //   const { customId } = req.params;
-  //   const updatedData = req.body;
-  //   const updatedUser = await User.findOneAndUpdate({ customId }, updatedData, {
-  //     new: true, // Return the updated document
-  //   });
-  //   if (!updatedUser) {
-  //     return res.status(404).send("User not found");
-  //   }
-  //   res.json(updatedUser);
-  // } catch (error) {
-  //   console.error(error);
-  //   res.status(500).send("Error updating user");
-  // }
   try {
     const { customId } = req.params;
     const {
@@ -162,4 +149,40 @@ router.put("/update-likedBooks/:customId", async (req, res) => {
   }
 });
 
+  router.get('/get-favorite-books/:customId', async (req, res) => {
+    try {
+      const customId = req.params.customId;
+      const user = await User.findOne({ customId: customId });
+      if (user) {
+        res.json(user.likedBooks);
+      } else {
+        res.status(404).send("User with the specified customId not found");
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Server error");
+    }
+
+});
+
+router.put("/update-order-history/:customId", async (req, res) => {
+  try {
+    const { customId } = req.params;
+    const { cart, date } = req.body;
+
+    const user = await User.findOne({ customId });
+    if (!user) {
+      return res.status(404).send("User not found!");
+    }
+
+    user.orderHistory.push({cart,date});
+    await user.save();
+
+    const updatedUserInfo = { orderHistory: user.orderHistory };
+    res.json(updatedUserInfo);
+  } catch (error) {
+    console.error("Error in update-order-history route:", error); // Log the specific error
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 module.exports = router;
