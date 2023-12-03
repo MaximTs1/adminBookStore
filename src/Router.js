@@ -7,6 +7,7 @@ import BookManage from "./Pages/BookManage/BookManage";
 import Order from "./Pages/Order/Order";
 import Login from "./Pages/LoginPage/Login";
 import EditBook from "./Pages/editBook/editBook";
+import JoyOrderDashboardTemplate from "./components/OrderBoard/JoyOrderDashboardTemplate";
 
 export default function Router() {
   return (
@@ -50,6 +51,14 @@ export default function Router() {
         element={
           <ProtectedRoute>
             <Order />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/JoyOrderDashboardTemplate"
+        element={
+          <ProtectedRoute>
+            <JoyOrderDashboardTemplate />
           </ProtectedRoute>
         }
       />
