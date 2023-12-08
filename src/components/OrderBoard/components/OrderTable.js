@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/joy/Avatar";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
@@ -11,8 +11,8 @@ import Input from "@mui/joy/Input";
 import Modal from "@mui/joy/Modal";
 import ModalDialog from "@mui/joy/ModalDialog";
 import ModalClose from "@mui/joy/ModalClose";
-import Select from "@mui/joy/Select";
-import Option from "@mui/joy/Option";
+// import Select from "@mui/joy/Select";
+// import Option from "@mui/joy/Option";
 import Table from "@mui/joy/Table";
 import Sheet from "@mui/joy/Sheet";
 import Checkbox from "@mui/joy/Checkbox";
@@ -32,189 +32,7 @@ import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
-
-const rows = [
-  {
-    id: "INV-1234",
-    date: "Feb 3, 2023",
-    status: "Refunded",
-    customer: {
-      initial: "O",
-      name: "Olivia Ryhe",
-      email: "olivia@email.com",
-    },
-  },
-  {
-    id: "INV-1233",
-    date: "Feb 3, 2023",
-    status: "Paid",
-    customer: {
-      initial: "S",
-      name: "Steve Hampton",
-      email: "steve.hamp@email.com",
-    },
-  },
-  {
-    id: "INV-1232",
-    date: "Feb 3, 2023",
-    status: "Refunded",
-    customer: {
-      initial: "C",
-      name: "Ciaran Murray",
-      email: "ciaran.murray@email.com",
-    },
-  },
-  {
-    id: "INV-1231",
-    date: "Feb 3, 2023",
-    status: "Refunded",
-    customer: {
-      initial: "M",
-      name: "Maria Macdonald",
-      email: "maria.mc@email.com",
-    },
-  },
-  {
-    id: "INV-1230",
-    date: "Feb 3, 2023",
-    status: "Cancelled",
-    customer: {
-      initial: "C",
-      name: "Charles Fulton",
-      email: "fulton@email.com",
-    },
-  },
-  {
-    id: "INV-1229",
-    date: "Feb 3, 2023",
-    status: "Cancelled",
-    customer: {
-      initial: "J",
-      name: "Jay Hooper",
-      email: "hooper@email.com",
-    },
-  },
-  {
-    id: "INV-1228",
-    date: "Feb 3, 2023",
-    status: "Refunded",
-    customer: {
-      initial: "K",
-      name: "Krystal Stevens",
-      email: "k.stevens@email.com",
-    },
-  },
-  {
-    id: "INV-1227",
-    date: "Feb 3, 2023",
-    status: "Paid",
-    customer: {
-      initial: "S",
-      name: "Sachin Flynn",
-      email: "s.flyn@email.com",
-    },
-  },
-  {
-    id: "INV-1226",
-    date: "Feb 3, 2023",
-    status: "Cancelled",
-    customer: {
-      initial: "B",
-      name: "Bradley Rosales",
-      email: "brad123@email.com",
-    },
-  },
-  {
-    id: "INV-1234",
-    date: "Feb 3, 2023",
-    status: "Paid",
-    customer: {
-      initial: "O",
-      name: "Olivia Ryhe",
-      email: "olivia@email.com",
-    },
-  },
-  {
-    id: "INV-1233",
-    date: "Feb 3, 2023",
-    status: "Cancelled",
-    customer: {
-      initial: "S",
-      name: "Steve Hampton",
-      email: "steve.hamp@email.com",
-    },
-  },
-  {
-    id: "INV-1232",
-    date: "Feb 3, 2023",
-    status: "Paid",
-    customer: {
-      initial: "C",
-      name: "Ciaran Murray",
-      email: "ciaran.murray@email.com",
-    },
-  },
-  {
-    id: "INV-1231",
-    date: "Feb 3, 2023",
-    status: "Refunded",
-    customer: {
-      initial: "M",
-      name: "Maria Macdonald",
-      email: "maria.mc@email.com",
-    },
-  },
-  {
-    id: "INV-1230",
-    date: "Feb 3, 2023",
-    status: "Paid",
-    customer: {
-      initial: "C",
-      name: "Charles Fulton",
-      email: "fulton@email.com",
-    },
-  },
-  {
-    id: "INV-1229",
-    date: "Feb 3, 2023",
-    status: "Cancelled",
-    customer: {
-      initial: "J",
-      name: "Jay Hooper",
-      email: "hooper@email.com",
-    },
-  },
-  {
-    id: "INV-1228",
-    date: "Feb 3, 2023",
-    status: "Cancelled",
-    customer: {
-      initial: "K",
-      name: "Krystal Stevens",
-      email: "k.stevens@email.com",
-    },
-  },
-  {
-    id: "INV-1227",
-    date: "Feb 3, 2023",
-    status: "Paid",
-    customer: {
-      initial: "S",
-      name: "Sachin Flynn",
-      email: "s.flyn@email.com",
-    },
-  },
-  {
-    id: "INV-1226",
-    date: "Feb 3, 2023",
-    status: "Cancelled",
-    customer: {
-      initial: "B",
-      name: "Bradley Rosales",
-      email: "brad123@email.com",
-    },
-  },
-];
+import "./style.css";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -264,55 +82,128 @@ function RowMenu() {
   );
 }
 
-export default function OrderTable() {
+export default function OrderTable({ rows }) {
   const [order, setOrder] = React.useState("desc");
   const [selected, setSelected] = React.useState([]);
   const [open, setOpen] = React.useState(false);
+  const [searchInput, setSearchInput] = React.useState("");
+  const [selectedStatus, setSelectedStatus] = React.useState("");
+  const [selectedCategory, setSelectedCategory] = React.useState("");
+  const [selectedCustomer, setSelectedCustomer] = React.useState("");
+
+  const itemsPerPage = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(rows.length / itemsPerPage);
+
+  const handlePrevious = () => {
+    setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
+  };
+
+  const handleNext = () => {
+    setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
+  };
+
+  const currentItems = rows.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   const colorMap = {
     Paid: "success",
     Refunded: "neutral",
     Cancelled: "danger",
   };
 
-  const chipColor = colorMap[rows.status] || "default";
+  const handleSearchChange = (event) => {
+    setSearchInput(event.target.value);
+  };
+
+  // Functions to handle filter changes
+  const handleStatusChange = (event) => {
+    setSelectedStatus(event.target.value);
+  };
+
+  const handleCategoryChange = (event) => {
+    setSelectedCategory(event.target.value);
+  };
+
+  const handleCustomerChange = (event) => {
+    setSelectedCustomer(event.target.value);
+  };
+
+  // Function to filter rows based on search input
+  const filterRows = (rows) => {
+    return rows.filter((row) => {
+      const matchesSearch = row.customer.name
+        .toLowerCase()
+        .includes(searchInput.toLowerCase());
+      const matchesStatus = selectedStatus
+        ? row.status.toLowerCase() === selectedStatus.toLowerCase()
+        : true;
+      const matchesCustomer = selectedCustomer
+        ? row.customer.name
+            .toLowerCase()
+            .includes(selectedCustomer.toLowerCase())
+        : true;
+      const matchesCategory = selectedCategory
+        ? row.category &&
+          row.category.toLowerCase() === selectedCategory.toLowerCase()
+        : true;
+
+      return (
+        matchesSearch && matchesStatus && matchesCustomer && matchesCategory
+      );
+    });
+  };
 
   const renderFilters = () => (
     <React.Fragment>
       <FormControl size="sm">
         <FormLabel>Status</FormLabel>
-        <Select
-          size="sm"
-          placeholder="Filter by status"
-          slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
+        <select
+          value={selectedStatus}
+          onChange={handleStatusChange}
+          className="your-select-class"
         >
-          <Option color="success" value="paid">
-            Paid
-          </Option>
-          <Option value="pending">Pending</Option>
-          <Option value="refunded">Refunded</Option>
-          <Option value="cancelled">Cancelled</Option>
-        </Select>
+          <option value="">All</option>
+          <option value="paid">Paid</option>
+          <option value="pending">Pending</option>
+          <option value="refunded">Refunded</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
       </FormControl>
       <FormControl size="sm">
         <FormLabel>Category</FormLabel>
-        <Select size="sm" placeholder="All">
-          <Option value="all">All</Option>
-          <Option value="refund">Refund</Option>
-          <Option value="purchase">Purchase</Option>
-          <Option value="debit">Debit</Option>
-        </Select>
+        <select
+          size="sm"
+          placeholder="Filter by category"
+          value={selectedCategory}
+          onChange={handleCategoryChange}
+          className="your-select-class"
+        >
+          <option value="">All</option>
+          <option value="refund">Refund</option>
+          <option value="purchase">Purchase</option>
+          <option value="debit">Debit</option>
+        </select>
       </FormControl>
       <FormControl size="sm">
         <FormLabel>Customer</FormLabel>
-        <Select size="sm" placeholder="All">
-          <Option value="all">All</Option>
-          <Option value="olivia">Olivia Rhye</Option>
-          <Option value="steve">Steve Hampton</Option>
-          <Option value="ciaran">Ciaran Murray</Option>
-          <Option value="marina">Marina Macdonald</Option>
-          <Option value="charles">Charles Fulton</Option>
-          <Option value="jay">Jay Hoper</Option>
-        </Select>
+        <select
+          size="sm"
+          placeholder="Filter by customer"
+          value={selectedCustomer}
+          onChange={handleCustomerChange}
+          className="your-select-class"
+        >
+          <option value="">All</option>
+          <option value="olivia">Olivia Rhye</option>
+          <option value="steve">Steve Hampton</option>
+          <option value="ciaran">Ciaran Murray</option>
+          <otion value="marina">Marina Macdonald</otion>
+          <option value="charles">Charles Fulton</option>
+          <option value="jay">Jay Hoper</option>
+        </select>
       </FormControl>
     </React.Fragment>
   );
@@ -374,6 +265,8 @@ export default function OrderTable() {
           <Input
             size="sm"
             placeholder="Search"
+            value={searchInput}
+            onChange={handleSearchChange}
             startDecorator={<SearchIcon />}
           />
         </FormControl>
@@ -455,7 +348,10 @@ export default function OrderTable() {
             </tr>
           </thead>
           <tbody>
-            {stableSort(rows, getComparator(order, "id")).map((row) => (
+            {stableSort(
+              filterRows(currentItems),
+              getComparator(order, "id")
+            ).map((row) => (
               <tr key={row.id}>
                 <td style={{ textAlign: "center", width: 120 }}>
                   <Checkbox
@@ -490,7 +386,7 @@ export default function OrderTable() {
                         Cancelled: <BlockIcon />,
                       }[row.status]
                     }
-                    color={chipColor}
+                    color={colorMap[row.status]}
                   >
                     {row.status}
                   </Chip>
@@ -533,35 +429,55 @@ export default function OrderTable() {
           },
         }}
       >
-        <Button
+        {/* <Button
           size="sm"
           variant="outlined"
           color="neutral"
-          startDecorator={<KeyboardArrowLeftIcon />}
+          // startDecorator={<KeyboardArrowLeftIcon />}
+          onClick={handlePrevious}
+          disabled={currentPage === 1}
         >
           Previous
-        </Button>
+        </Button> */}
+        <IconButton
+          aria-label="previous page"
+          variant="outlined"
+          color="neutral"
+          size="sm"
+          onClick={handlePrevious}
+          disabled={currentPage === 1}
+        >
+          <KeyboardArrowLeftIcon />
+        </IconButton>
 
-        <Box sx={{ flex: 1 }} />
-        {["1", "2", "3", "…", "8", "9", "10"].map((page) => (
-          <IconButton
-            key={page}
-            size="sm"
-            variant={Number(page) ? "outlined" : "plain"}
-            color="neutral"
-          >
-            {page}
-          </IconButton>
-        ))}
-        <Box sx={{ flex: 1 }} />
+        <Typography level="body-sm" mx="auto">
+          Page {currentPage} of {totalPages}
+        </Typography>
 
-        <Button
+        {/* <Button
           size="sm"
           variant="outlined"
           color="neutral"
-          endDecorator={<KeyboardArrowRightIcon />}
+          onClick={handleNext}
+          disabled={currentPage === totalPages}
         >
           Next
+        </Button> */}
+
+        <Button
+          aria-label="next page"
+          variant="outlined"
+          color="neutral"
+          size="sm"
+          onClick={handleNext}
+          disabled={currentPage === totalPages}
+          startIcon={<KeyboardArrowRightIcon />}
+          sx={{
+            display: "inline-flex", // Ensures icon and text are inline
+            alignItems: "center", // Aligns items vertically
+          }}
+        >
+          Next &gt;
         </Button>
       </Box>
     </React.Fragment>

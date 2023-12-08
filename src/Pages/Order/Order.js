@@ -3,7 +3,11 @@ import JoyOrderDashboardTemplate from "../../components/OrderBoard/JoyOrderDashb
 import "./Order.css";
 
 const Order = () => {
-  return <div className="OrderFrame"></div>;
+  return (
+    <div className="OrderFrame">
+      <JoyOrderDashboardTemplate />
+    </div>
+  );
 };
 
 export default Order;

@@ -25,6 +25,7 @@ const defaultTheme = createTheme();
 const EditBook = () => {
   const location = useLocation();
   const bookFromLocation = location.state?.book;
+  const navigate = useNavigate();
 
   const [bookData, setBookData] = useState(() => {
     if (bookFromLocation) {
@@ -118,9 +119,13 @@ const EditBook = () => {
       }
 
       const updatedBook = await response.json();
-      console.log("Updated Book:", updatedBook);
+      alert(response.data.message);
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      // Navigate to the desired route regardless of the try/catch result
+      alert("The cards was eddited successfully");
+      navigate("/bookmanage");
     }
   };
 

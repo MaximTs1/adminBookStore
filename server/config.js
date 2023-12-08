@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = "FullStackW050323MyTokenMagnivMeod";
 
-const getUser = (req, res) => {
+const getUserId = (req, res) => {
   if (!req.headers.authorization) {
     return null;
   }
@@ -12,8 +12,8 @@ const getUser = (req, res) => {
     return res.status(401).send("User is not authorized");
   }
 
-  return data.user;
+  return data.id;
 };
 
 exports.JWT_SECRET = JWT_SECRET;
-exports.getUser = getUser;
+exports.getUserId = getUserId;

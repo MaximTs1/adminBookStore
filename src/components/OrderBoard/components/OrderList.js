@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Box from "@mui/joy/Box";
 import Avatar from "@mui/joy/Avatar";
 import Chip from "@mui/joy/Chip";
@@ -23,69 +23,6 @@ import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 
-const listItems = [
-  {
-    id: "INV-1234",
-    date: "Feb 3, 2023",
-    status: "Refunded",
-    customer: {
-      initial: "O",
-      name: "Olivia Ryhe",
-      email: "olivia@email.com",
-    },
-  },
-  {
-    id: "INV-1233",
-    date: "Feb 3, 2023",
-    status: "Paid",
-    customer: {
-      initial: "S",
-      name: "Steve Hampton",
-      email: "steve.hamp@email.com",
-    },
-  },
-  {
-    id: "INV-1232",
-    date: "Feb 3, 2023",
-    status: "Refunded",
-    customer: {
-      initial: "C",
-      name: "Ciaran Murray",
-      email: "ciaran.murray@email.com",
-    },
-  },
-  {
-    id: "INV-1231",
-    date: "Feb 3, 2023",
-    status: "Refunded",
-    customer: {
-      initial: "M",
-      name: "Maria Macdonald",
-      email: "maria.mc@email.com",
-    },
-  },
-  {
-    id: "INV-1230",
-    date: "Feb 3, 2023",
-    status: "Cancelled",
-    customer: {
-      initial: "C",
-      name: "Charles Fulton",
-      email: "fulton@email.com",
-    },
-  },
-  {
-    id: "INV-1229",
-    date: "Feb 3, 2023",
-    status: "Cancelled",
-    customer: {
-      initial: "J",
-      name: "Jay Hooper",
-      email: "hooper@email.com",
-    },
-  },
-];
-
 function RowMenu() {
   return (
     <Dropdown>
@@ -106,10 +43,26 @@ function RowMenu() {
   );
 }
 
-export default function OrderList() {
+export default function OrderList({ rows }) {
+  const itemsPerPage = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(rows.length / itemsPerPage);
+
+  const handlePrevious = () => {
+    setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
+  };
+
+  const handleNext = () => {
+    setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
+  };
+
+  const currentItems = rows.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
   return (
     <Box sx={{ display: { xs: "block", sm: "none" } }}>
-      {listItems.map((listItem) => (
+      {currentItems.map((listItem) => (
         <List
           key={listItem.id}
           size="sm"
@@ -197,17 +150,21 @@ export default function OrderList() {
           variant="outlined"
           color="neutral"
           size="sm"
+          onClick={handlePrevious}
+          disabled={currentPage === 1}
         >
           <KeyboardArrowLeftIcon />
         </IconButton>
         <Typography level="body-sm" mx="auto">
-          Page 1 of 10
+          Page {currentPage} of {totalPages}{" "}
         </Typography>
         <IconButton
           aria-label="next page"
           variant="outlined"
           color="neutral"
           size="sm"
+          onClick={handleNext}
+          disabled={currentPage === totalPages}
         >
           <KeyboardArrowRightIcon />
         </IconButton>

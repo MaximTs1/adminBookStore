@@ -93,10 +93,13 @@ const AddCard = () => {
       );
       alert(response.data.message);
     } catch (error) {
-      console.error("There was an error registering the user:", error);
+      console.error(
+        "There was an error edding the book (the file might be to large)",
+        error
+      );
       alert(
         error.response?.data?.message ||
-          "There was an error registering the user."
+          "There was an error edding the book (the file might be to large)"
       );
     }
   };

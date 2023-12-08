@@ -4,10 +4,10 @@ const express = require("express");
 const router = express.Router();
 const User = require("./models/User");
 const authGuard = require("./auth-guard");
-const { JWT_SECRET, getUser } = require("./config");
+const { JWT_SECRET, getUserId } = require("./config");
 const Counter = require("./models/Counter");
 
-// GET all users weithout authguard
+// GET all users weithout authguard - needs auth to all manager
 router.get("/all-users", async (req, res) => {
   try {
     // Fetch all users from the database
@@ -22,9 +22,24 @@ router.get("/all-users", async (req, res) => {
 });
 
 router.get("/login", authGuard, async (req, res) => {
-  const user = getUser(req, res);
+  const customId = getUserId(req, res);
 
-  res.send(user);
+  try {
+    const LoggedUser = await User.findOne({ customId });
+
+    if (!LoggedUser) {
+      return res.status(403).send("username or password is incorrect");
+    }
+
+    // Note: Consider using select to exclude fields instead of delete
+    delete LoggedUser.password;
+    delete LoggedUser.email;
+
+    res.send(LoggedUser);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 //ADD user
@@ -47,7 +62,7 @@ router.post("/signup", async (req, res) => {
       houseNumber: req.body.houseNumber,
       zip: req.body.zip,
       likedBooks: [],
-      orderHistory: []
+      orderHistory: [],
     });
 
     const newUser = await user.save();
@@ -79,16 +94,16 @@ router.post("/login", async (req, res) => {
   // מחיקת הסיסמה מהאובייקט שנשלח למשתמש
   delete userResult.password;
   // יצירת טוקן
-  userResult.token = jwt.sign({ user: userResult }, JWT_SECRET, {
+  userResult.token = jwt.sign({ id: userResult.customId }, JWT_SECRET, {
     expiresIn: "1h",
   });
 
   res.send(userResult);
 });
 
-router.get("/logout", async (req, res) => {});
+router.get("/logout", authGuard, async (req, res) => {});
 
-router.put("/get-user-info/:customId", async (req, res) => {
+router.put("/get-user-info/:customId", authGuard, async (req, res) => {
   try {
     const { customId } = req.params;
     const {
@@ -128,7 +143,7 @@ router.put("/get-user-info/:customId", async (req, res) => {
   }
 });
 
-router.put("/update-likedBooks/:customId", async (req, res) => {
+router.put("/update-likedBooks/:customId", authGuard, async (req, res) => {
   try {
     const { customId } = req.params;
     const { likedBooks } = req.body;
@@ -149,23 +164,22 @@ router.put("/update-likedBooks/:customId", async (req, res) => {
   }
 });
 
-  router.get('/get-favorite-books/:customId', async (req, res) => {
-    try {
-      const customId = req.params.customId;
-      const user = await User.findOne({ customId: customId });
-      if (user) {
-        res.json(user.likedBooks);
-      } else {
-        res.status(404).send("User with the specified customId not found");
-      }
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Server error");
+router.get("/get-favorite-books/:customId", authGuard, async (req, res) => {
+  try {
+    const customId = req.params.customId;
+    const user = await User.findOne({ customId: customId });
+    if (user) {
+      res.json(user.likedBooks);
+    } else {
+      res.status(404).send("User with the specified customId not found");
     }
-
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server error");
+  }
 });
 
-router.put("/update-order-history/:customId", async (req, res) => {
+router.put("/update-order-history/:customId", authGuard, async (req, res) => {
   try {
     const { customId } = req.params;
     const { cart, date } = req.body;
@@ -175,7 +189,7 @@ router.put("/update-order-history/:customId", async (req, res) => {
       return res.status(404).send("User not found!");
     }
 
-    user.orderHistory.push({cart,date});
+    user.orderHistory.push({ cart, date });
     await user.save();
 
     const updatedUserInfo = { orderHistory: user.orderHistory };
