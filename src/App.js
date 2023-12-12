@@ -6,7 +6,7 @@ import Loader from "./components/Loader";
 import Snackbar from "./components/Snackbar";
 import "./App.css";
 import { AuthProvider } from "./AuthContext";
-import AutoLogoutHandler from "./AutoLogoutHandler"; // Make sure the path is correct
+import AutoLogoutHandler from "./AutoLogoutHandler";
 
 export const GeneralContext = createContext();
 

@@ -22,10 +22,10 @@ router.get("/all-users", async (req, res) => {
 });
 
 router.get("/login", authGuard, async (req, res) => {
-  const customId = getUserId(req, res);
+  const _id = getUserId(req, res);
 
   try {
-    const LoggedUser = await User.findOne({ customId });
+    const LoggedUser = await User.findOne({ _id });
 
     if (!LoggedUser) {
       return res.status(403).send("username or password is incorrect");
@@ -84,17 +84,17 @@ router.post("/login", async (req, res) => {
   }
 
   const passwordMatch = await bcrypt.compare(password, user.password);
-
   if (!passwordMatch) {
     return res.status(403).send("username or password is incorrect");
   }
 
   // יצירת אובייקט רגיל מהמחלקה של היוזר
   const userResult = user.toObject();
+
   // מחיקת הסיסמה מהאובייקט שנשלח למשתמש
   delete userResult.password;
   // יצירת טוקן
-  userResult.token = jwt.sign({ id: userResult.customId }, JWT_SECRET, {
+  userResult.token = jwt.sign({ id: userResult._id }, JWT_SECRET, {
     expiresIn: "1h",
   });
 
@@ -134,9 +134,9 @@ router.put("/get-user-info/:customId", authGuard, async (req, res) => {
     user.houseNumber = houseNumber;
     user.zip = zip;
 
-    await user.save();
-
-    res.json(user);
+    const resultUser = await user.save();
+    delete resultUser.password;
+    res.send(resultUser);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
