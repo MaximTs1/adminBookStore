@@ -199,4 +199,21 @@ router.put("/update-order-history/:customId", authGuard, async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+router.get('/order-history/:customId', async (req, res) => {
+  try {
+    const { customId } = req.params;
+    const user = await User.findOne({ customId });
+
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    res.json(user.orderHistory);
+  } catch (error) {
+    console.error("Error fetching order history:", error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 module.exports = router;
