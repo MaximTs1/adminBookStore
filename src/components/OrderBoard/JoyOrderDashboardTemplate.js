@@ -6,7 +6,7 @@ import Button from "@mui/joy/Button";
 import Typography from "@mui/joy/Typography";
 import feather from "feather-icons";
 import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
-import useScript from "./useScript";
+import useScript from "./components/useScript";
 import OrderTable from "./components/OrderTable";
 import OrderList from "./components/OrderList";
 import Header from "./components/Header";
@@ -41,7 +41,7 @@ export default function JoyOrderDashboardTemplate() {
     {
       id: "INV-1241",
       date: "Feb 3, 2023",
-      status: "Refunded",
+      status: "InProcess",
       customer: {
         initial: "C",
         name: "Ciaran Murray",
@@ -71,7 +71,7 @@ export default function JoyOrderDashboardTemplate() {
     {
       id: "INV-1238",
       date: "Feb 3, 2023",
-      status: "Cancelled",
+      status: "InProcess",
       customer: {
         initial: "J",
         name: "Jay Hooper",
@@ -171,7 +171,7 @@ export default function JoyOrderDashboardTemplate() {
     {
       id: "INV-1228",
       date: "Feb 3, 2023",
-      status: "Cancelled",
+      status: "InProcess",
       customer: {
         initial: "K",
         name: "Krystal Stevens",
@@ -245,13 +245,13 @@ export default function JoyOrderDashboardTemplate() {
             <Typography level="h2" component="h1">
               {/* Orders */}
             </Typography>
-            <Button
+            {/* <Button
               color="primary"
               startDecorator={<DownloadRoundedIcon />}
               size="sm"
             >
               Download PDF
-            </Button>
+            </Button> */}
           </Box>
           <OrderTable rows={rows} />
           <OrderList rows={rows} />

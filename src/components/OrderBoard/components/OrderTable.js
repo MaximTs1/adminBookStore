@@ -27,6 +27,7 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import BlockIcon from "@mui/icons-material/Block";
 import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -112,6 +113,7 @@ export default function OrderTable({ rows }) {
     Paid: "success",
     Refunded: "neutral",
     Cancelled: "danger",
+    InProcess: "warning", //secondary
   };
 
   const handleSearchChange = (event) => {
@@ -167,13 +169,13 @@ export default function OrderTable({ rows }) {
         >
           <option value="">All</option>
           <option value="paid">Paid</option>
-          <option value="pending">Pending</option>
+          <option value="inprocess">In Process</option>
           <option value="refunded">Refunded</option>
           <option value="cancelled">Cancelled</option>
         </select>
       </FormControl>
       <FormControl size="sm">
-        <FormLabel>Category</FormLabel>
+        <FormLabel>Delivery Status</FormLabel>
         <select
           size="sm"
           placeholder="Filter by category"
@@ -182,9 +184,9 @@ export default function OrderTable({ rows }) {
           className="your-select-class"
         >
           <option value="">All</option>
-          <option value="refund">Refund</option>
-          <option value="purchase">Purchase</option>
-          <option value="debit">Debit</option>
+          <option value="preparingyourpackage">Preparing Your Package</option>
+          <option value="shipped">Shipped</option>
+          <option value="delivered">Delivered</option>
         </select>
       </FormControl>
       <FormControl size="sm">
@@ -384,9 +386,11 @@ export default function OrderTable({ rows }) {
                         Paid: <CheckRoundedIcon />,
                         Refunded: <AutorenewRoundedIcon />,
                         Cancelled: <BlockIcon />,
+                        InProcess: <LocalShippingIcon/>,
                       }[row.status]
                     }
                     color={colorMap[row.status]}
+                    onClick={() => window.location.href = '/'}
                   >
                     {row.status}
                   </Chip>

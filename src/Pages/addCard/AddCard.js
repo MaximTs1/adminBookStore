@@ -106,7 +106,7 @@ const AddCard = () => {
 
   return (
     <div className="home">
-      <div className="Frame">
+      <div className="AddCardFrame">
         <div className="CardPreview">
           {bookData.image && (
             <img

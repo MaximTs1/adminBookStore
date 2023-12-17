@@ -5,10 +5,10 @@ const orderSchema = new mongoose.Schema({
     timePlaced: Date,
     orderNumber: String,
     total: Number,
-    soldBy: String,
+    status: String, // e.g., 'Completed', 'Canceled', 'Refunded', 'In Process'
   },
   deliveryInfo: {
-    status: String, // e.g., 'Paid', 'Shipped', 'Delivered'
+    status: String, // e.g., 'In Process', 'shipped', 'Delivered'
     trackingDetails: {
       shippingService: String,
       trackingNumber: String,
@@ -25,7 +25,7 @@ const orderSchema = new mongoose.Schema({
     addressLine2: String,
     city: String,
     zip: String,
-    country: String,
+    other: String,
   },
   paymentInfo: {
     method: String,

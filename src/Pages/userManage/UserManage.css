@@ -1,14 +1,16 @@
 .Usersframe {
   position: fixed;
-  top: 10%; /* Centering the frame with 10% margin on each side */
-  left: 10%;
-  width: 80%; /* 80% of the screen width */
-  height: 80%; /* 80% of the screen height */
-  z-index: 10; /* Ensure it's above other content */
+  top: 5%; /* Centering the frame with 10% margin on each side */
+  left: 5%;
+  width: 90%; /* 80% of the screen width */
+  height: 90%; /* 80% of the screen height */
+  z-index: 1; /* Ensure it's above other content */
   border: 1px solid #000; /* Optional border for visibility */
   border-radius: 20px;
   padding: 20px; /* Add padding inside the frame */
   background-color: rgb(105, 189, 161);
+  overflow: auto;
+
 }
 
 /* Styling for the table */
