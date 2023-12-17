@@ -182,14 +182,14 @@ router.get("/get-favorite-books/:customId", authGuard, async (req, res) => {
 router.put("/update-order-history/:customId", authGuard, async (req, res) => {
   try {
     const { customId } = req.params;
-    const { cart, date } = req.body;
+    const { cart, date, orderStatus } = req.body;
 
     const user = await User.findOne({ customId });
     if (!user) {
       return res.status(404).send("User not found!");
     }
 
-    user.orderHistory.push({ cart, date });
+    user.orderHistory.push({ cart, date, orderStatus });
     await user.save();
 
     const updatedUserInfo = { orderHistory: user.orderHistory };
@@ -200,19 +200,48 @@ router.put("/update-order-history/:customId", authGuard, async (req, res) => {
   }
 });
 
-router.get('/order-history/:customId', async (req, res) => {
+router.get("/order-history/:customId", async (req, res) => {
   try {
     const { customId } = req.params;
     const user = await User.findOne({ customId });
 
     if (!user) {
-      return res.status(404).send('User not found');
+      return res.status(404).send("User not found");
     }
 
     res.json(user.orderHistory);
   } catch (error) {
     console.error("Error fetching order history:", error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.get("/orders", async (req, res) => {
+  try {
+    const users = await User.find({});
+    const ordersData = users.reduce((acc, user) => {
+      // Check if the user has an order history
+      if (user.orderHistory && user.orderHistory.length > 0) {
+        const userOrders = user.orderHistory.map((order) => ({
+          id: order._id,
+          date: order.date,
+          status: order.orderStatus,
+          cart: order.cart,
+          customer: {
+            initial: user.firstName[0],
+            name: `${user.firstName} ${user.lastName}`,
+            email: user.email,
+          },
+        }));
+        acc.push(...userOrders);
+      }
+      return acc;
+    }, []);
+
+    res.json(ordersData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server error");
   }
 });
 

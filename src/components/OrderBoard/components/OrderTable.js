@@ -27,7 +27,7 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import BlockIcon from "@mui/icons-material/Block";
 import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -91,6 +91,8 @@ export default function OrderTable({ rows }) {
   const [selectedStatus, setSelectedStatus] = React.useState("");
   const [selectedCategory, setSelectedCategory] = React.useState("");
   const [selectedCustomer, setSelectedCustomer] = React.useState("");
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
@@ -184,7 +186,8 @@ export default function OrderTable({ rows }) {
           className="your-select-class"
         >
           <option value="">All</option>
-          <option value="preparingyourpackage">Preparing Your Package</option>
+          <option value="placed">Placed</option>
+          <option value="processing">Processing</option>
           <option value="shipped">Shipped</option>
           <option value="delivered">Delivered</option>
         </select>
@@ -209,6 +212,12 @@ export default function OrderTable({ rows }) {
       </FormControl>
     </React.Fragment>
   );
+
+  const toggleOrderDetails = (order) => {
+    setSelectedOrder(order);
+    setIsModalOpen(!isModalOpen);
+  };
+
   return (
     <React.Fragment>
       <Sheet
@@ -386,11 +395,11 @@ export default function OrderTable({ rows }) {
                         Paid: <CheckRoundedIcon />,
                         Refunded: <AutorenewRoundedIcon />,
                         Cancelled: <BlockIcon />,
-                        InProcess: <LocalShippingIcon/>,
+                        InProcess: <LocalShippingIcon />,
                       }[row.status]
                     }
                     color={colorMap[row.status]}
-                    onClick={() => window.location.href = '/'}
+                    onClick={() => (window.location.href = "/")}
                   >
                     {row.status}
                   </Chip>

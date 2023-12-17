@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cartItemSchema = new mongoose.Schema({
   id: Number,
   name: String,
+  image: String,
   amount: Number,
   price: Number,
   // Removed other properties to keep only id, name, amount, and price
@@ -11,7 +12,8 @@ const cartItemSchema = new mongoose.Schema({
 // Schema for an order in the order history
 const orderSchema = new mongoose.Schema({
   cart: [cartItemSchema],
-  date: Date, // or String, depending on how you store dates
+  date: Date,
+  orderStatus: String,
 });
 
 // Define the User schema
