@@ -7,7 +7,7 @@ import BookManage from "./Pages/BookManage/BookManage";
 import Order from "./Pages/Order/Order";
 import Login from "./Pages/LoginPage/Login";
 import EditBook from "./Pages/editBook/editBook";
-import JoyOrderDashboardTemplate from "./components/OrderBoard/JoyOrderDashboardTemplate";
+// import OrderDashboard from "./components/OrderBoard/OrderDashboard";
 
 export default function Router() {
   return (
@@ -54,14 +54,14 @@ export default function Router() {
           </ProtectedRoute>
         }
       />
-      <Route
-        path="/JoyOrderDashboardTemplate"
+      {/* <Route
+        path="/OrderDashboard"
         element={
           <ProtectedRoute>
-            <JoyOrderDashboardTemplate />
+            <OrderDashboard />
           </ProtectedRoute>
         }
-      />
+      /> */}
       <Route
         path="/editCard"
         element={
