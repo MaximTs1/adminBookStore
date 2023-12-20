@@ -88,12 +88,8 @@ router.post("/login", async (req, res) => {
     return res.status(403).send("username or password is incorrect");
   }
 
-  // יצירת אובייקט רגיל מהמחלקה של היוזר
   const userResult = user.toObject();
-
-  // מחיקת הסיסמה מהאובייקט שנשלח למשתמש
   delete userResult.password;
-  // יצירת טוקן
   userResult.token = jwt.sign({ id: userResult._id }, JWT_SECRET, {
     expiresIn: "1h",
   });
@@ -111,7 +107,6 @@ router.put("/get-user-info/:customId", authGuard, async (req, res) => {
       lastName,
       phone,
       email,
-      password,
       city,
       street,
       houseNumber,
@@ -123,12 +118,10 @@ router.put("/get-user-info/:customId", authGuard, async (req, res) => {
     if (!user) {
       return res.status(404).send("User not found!");
     }
-
     user.firstName = firstName;
     user.lastName = lastName;
     user.phone = phone;
     user.email = email;
-    user.password = await bcrypt.hash(password, 10);
     user.city = city;
     user.street = street;
     user.houseNumber = houseNumber;
@@ -245,7 +238,7 @@ router.get("/orders", async (req, res) => {
   }
 });
 
-router.put("/updateOrderStatus/:orderId", async (req, res) => {
+router.put("/updateOrderStatus/:orderId", authGuard, async (req, res) => {
   const { orderId } = req.params;
   const { status } = req.body;
 
@@ -275,6 +268,40 @@ router.put("/updateOrderStatus/:orderId", async (req, res) => {
   } catch (error) {
     console.error("Error updating order status:", error);
     res.status(500).send({ message: "Internal Server Error" });
+  }
+});
+
+router.put("/update-password", async (req, res) => {
+  const { email, password, newPassword } = req.body;
+
+  try {
+    // Find the user by email
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(403).send("Email not found");
+    }
+
+    // Compare the provided current password with the hashed password in the database
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      return res.status(403).send("Current password is incorrect");
+    }
+
+    // Hash the new password
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the user's password with the new hashed password
+    user.password = hashedNewPassword;
+
+    // Save the updated user in the database
+    await user.save();
+
+    res.send("Password updated successfully");
+  } catch (error) {
+    console.error("Error updating password:", error);
+    res.status(500).send("Internal server error");
   }
 });
 
