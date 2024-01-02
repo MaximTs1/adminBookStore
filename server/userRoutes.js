@@ -175,14 +175,14 @@ router.get("/get-favorite-books/:customId", authGuard, async (req, res) => {
 router.put("/update-order-history/:customId", authGuard, async (req, res) => {
   try {
     const { customId } = req.params;
-    const { cart, date, orderStatus } = req.body;
+    const { cart, date, orderStatus, info } = req.body;
 
     const user = await User.findOne({ customId });
     if (!user) {
       return res.status(404).send("User not found!");
     }
 
-    user.orderHistory.push({ cart, date, orderStatus });
+    user.orderHistory.push({ cart, date, orderStatus, info });
     await user.save();
 
     const updatedUserInfo = { orderHistory: user.orderHistory };

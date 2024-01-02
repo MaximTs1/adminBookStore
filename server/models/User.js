@@ -6,7 +6,16 @@ const cartItemSchema = new mongoose.Schema({
   image: String,
   amount: Number,
   price: Number,
-  // Removed other properties to keep only id, name, amount, and price
+});
+
+const dliveryInfo = new mongoose.Schema({
+  fullName: String,
+  email: String,
+  phone: Number,
+  address: String, 
+  city: String,
+  postalCode: Number,
+  paymentMethod: String,
 });
 
 // Schema for an order in the order history
@@ -14,6 +23,7 @@ const orderSchema = new mongoose.Schema({
   cart: [cartItemSchema],
   date: Date,
   orderStatus: String,
+  info: dliveryInfo
 });
 
 // Define the User schema
