@@ -12,7 +12,7 @@ const dliveryInfo = new mongoose.Schema({
   fullName: String,
   email: String,
   phone: Number,
-  address: String, 
+  address: String,
   city: String,
   postalCode: Number,
   paymentMethod: String,
@@ -20,10 +20,11 @@ const dliveryInfo = new mongoose.Schema({
 
 // Schema for an order in the order history
 const orderSchema = new mongoose.Schema({
+  orderId: { type: Number, required: false, unique: true },
   cart: [cartItemSchema],
   date: Date,
   orderStatus: String,
-  info: dliveryInfo
+  info: dliveryInfo,
 });
 
 // Define the User schema

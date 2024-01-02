@@ -173,6 +173,13 @@ router.get("/get-favorite-books/:customId", authGuard, async (req, res) => {
 });
 
 router.put("/update-order-history/:customId", authGuard, async (req, res) => {
+  // Generate Order ID
+  const countDocument = await Counter.findByIdAndUpdate(
+    { _id: "orderId" },
+    { $inc: { seq: 1 } },
+    { new: true, upsert: true }
+  );
+
   try {
     const { customId } = req.params;
     const { cart, date, orderStatus, info } = req.body;
@@ -182,7 +189,15 @@ router.put("/update-order-history/:customId", authGuard, async (req, res) => {
       return res.status(404).send("User not found!");
     }
 
-    user.orderHistory.push({ cart, date, orderStatus, info });
+    // Add orderId to the order
+    user.orderHistory.push({
+      orderId: countDocument.seq,
+      cart,
+      date,
+      orderStatus,
+      info,
+    });
+
     await user.save();
 
     const updatedUserInfo = { orderHistory: user.orderHistory };
@@ -216,7 +231,7 @@ router.get("/orders", async (req, res) => {
       // Check if the user has an order history
       if (user.orderHistory && user.orderHistory.length > 0) {
         const userOrders = user.orderHistory.map((order) => ({
-          id: order._id,
+          orderId: order.orderId,
           date: order.date,
           status: order.orderStatus,
           cart: order.cart,
@@ -238,17 +253,19 @@ router.get("/orders", async (req, res) => {
   }
 });
 
-router.put("/updateOrderStatus/:orderId", authGuard, async (req, res) => {
+router.put("/updateOrderStatus/:orderId", async (req, res) => {
   const { orderId } = req.params;
   const { status } = req.body;
 
   try {
     // Iterate over users to find the order
-    const user = await User.findOne({ "orderHistory._id": orderId });
+    const user = await User.findOne({ "orderHistory.orderId": orderId });
 
     if (user) {
       // Find the specific order in the user's order history
-      const order = user.orderHistory.find((o) => o._id.toString() === orderId);
+      const order = user.orderHistory.find(
+        (o) => o.orderId.toString() === orderId
+      );
 
       if (order) {
         // Update the order status
