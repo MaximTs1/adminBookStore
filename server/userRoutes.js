@@ -256,32 +256,26 @@ router.get("/orders", async (req, res) => {
 router.put("/updateOrderStatus/:orderId", async (req, res) => {
   const { orderId } = req.params;
   const { status } = req.body;
-
+  //change orderStatus after all changes to orders are made
   try {
-    // Iterate over users to find the order
     const user = await User.findOne({ "orderHistory.orderId": orderId });
-
     if (user) {
-      // Find the specific order in the user's order history
       const order = user.orderHistory.find(
-        (o) => o.orderId.toString() === orderId
+        (o) => o.orderId && o.orderId.toString() === orderId
       );
 
       if (order) {
-        // Update the order status
         order.orderStatus = status;
-
-        // Save the changes
         await user.save();
-
         return res
           .status(200)
           .send({ message: "Order status updated successfully" });
+      } else {
+        return res.status(404).send({ message: "Order not found" });
       }
+    } else {
+      return res.status(404).send({ message: "User not found" });
     }
-
-    // If order not found
-    res.status(404).send({ message: "Order not found" });
   } catch (error) {
     console.error("Error updating order status:", error);
     res.status(500).send({ message: "Internal Server Error" });

@@ -9,8 +9,8 @@ import OrderTable from "./components/OrderTable";
 import OrderList from "./components/OrderList";
 import Header from "./components/Header";
 
-const useEnhancedEffect =
-  typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
+// const useEnhancedEffect =
+//   typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
 
 export default function JoyOrderDashboardTemplate() {
   const status = useScript("https://unpkg.com/feather-icons");

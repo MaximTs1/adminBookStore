@@ -82,7 +82,13 @@ const UserManage = () => {
             <TableRow>
               {users[0] &&
                 Object.keys(users[0])
-                  .filter((key) => key !== "_id" && key !== "__v")
+                  .filter(
+                    (key) =>
+                      key !== "_id" &&
+                      key !== "__v" &&
+                      key !== "zip" &&
+                      key !== "houseNumber"
+                  )
                   .map((key) => <TableCell key={key}>{key}</TableCell>)}
             </TableRow>
           </TableHead>
@@ -90,10 +96,32 @@ const UserManage = () => {
             {filteredData.map((user, index) => (
               <TableRow key={index}>
                 {Object.entries(user)
-                  .filter(([key, _]) => key !== "_id" && key !== "__v")
-                  .map(([key, value], cellIndex) => (
-                    <TableCell key={cellIndex}>{value.toString()}</TableCell>
-                  ))}
+                  .filter(
+                    ([key, _]) =>
+                      key !== "_id" &&
+                      key !== "__v" &&
+                      key !== "zip" &&
+                      key !== "houseNumber"
+                  )
+                  .map(([key, value], cellIndex) => {
+                    // Check if the key is 'orderHistory' or 'likedBooks'
+                    if (
+                      (key === "orderHistory" || key === "likedBooks") &&
+                      Array.isArray(value)
+                    ) {
+                      // Return a TableCell with the length of the array
+                      return (
+                        <TableCell key={cellIndex}>{value.length}</TableCell>
+                      );
+                    } else {
+                      // For other keys, return a TableCell with the value
+                      return (
+                        <TableCell key={cellIndex}>
+                          {value.toString()}
+                        </TableCell>
+                      );
+                    }
+                  })}
               </TableRow>
             ))}
           </TableBody>

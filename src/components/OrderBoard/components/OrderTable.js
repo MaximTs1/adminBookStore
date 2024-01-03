@@ -33,6 +33,8 @@ import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
+import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
+import NewReleasesIcon from "@mui/icons-material/NewReleases";
 import "./style.css";
 
 function descendingComparator(a, b, orderBy) {
@@ -84,6 +86,9 @@ function RowMenu() {
 }
 
 export default function OrderTable({ rows }) {
+  const [anchorEl, setAnchorEl] = useState(null);
+  // State to track the anchor of each row's menu
+  const [menuAnchors, setMenuAnchors] = useState({});
   const [order, setOrder] = React.useState("desc");
   const [selected, setSelected] = React.useState([]);
   const [open, setOpen] = React.useState(false);
@@ -96,59 +101,75 @@ export default function OrderTable({ rows }) {
 
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(rows.length / itemsPerPage);
 
-  const handlePrevious = () => {
-    setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
+  const handleClick = (event, orderId) => {
+    setMenuAnchors((prevAnchors) => ({
+      ...prevAnchors,
+      [orderId]: prevAnchors[orderId] ? null : event.currentTarget, // Toggle
+    }));
   };
 
-  const handleNext = () => {
-    setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
+  const handleClose = (orderId, status) => {
+    setMenuAnchors((prevAnchors) => ({
+      ...prevAnchors,
+      [orderId]: null, // Close the menu
+    }));
+    if (status && orderId) {
+      updateOrderStatus(orderId, status);
+    }
   };
 
-  const currentItems = rows.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const updateOrderStatus = async (orderId, newStatus) => {
+    // API call to update the status
+    try {
+      const response = await fetch(
+        `http://185.229.226.27:3001/user/updateOrderStatus/${orderId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            // Add your auth headers if needed
+          },
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
 
-  const colorMap = {
-    Paid: "success",
-    Refunded: "neutral",
-    Cancelled: "danger",
-    InProcess: "warning", //secondary
+      const result = await response.json();
+      console.log(result);
+      // Handle the response, update local state, etc.
+    } catch (error) {
+      console.error("Error updating order status:", error);
+    }
   };
 
-  const handleSearchChange = (event) => {
-    setSearchInput(event.target.value);
-  };
+  const statusOptions = [
+    "Delivered",
+    "Processing",
+    "Placed",
+    "Canceled",
+    "Shipped",
+    "Refunded",
+  ];
 
-  // Functions to handle filter changes
-  const handleStatusChange = (event) => {
-    setSelectedStatus(event.target.value);
-  };
-
-  const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
-  };
-
-  const handleCustomerChange = (event) => {
-    setSelectedCustomer(event.target.value);
-  };
-
-  // Function to filter rows based on search input
+  // Function to filter rows based on search input fdbgzfdbfddsfhsdfdfshdfh
   const filterRows = (rows) => {
     return rows.filter((row) => {
       const matchesSearch = row.customer.name
         .toLowerCase()
         .includes(searchInput.toLowerCase());
+
       const matchesStatus = selectedStatus
-        ? row.status.toLowerCase() === selectedStatus.toLowerCase()
+        ? row.status &&
+          row.status.toLowerCase() === selectedStatus.toLowerCase()
         : true;
+
       const matchesCustomer = selectedCustomer
-        ? row.customer.name
+        ? row.customer.name &&
+          row.customer.name
             .toLowerCase()
             .includes(selectedCustomer.toLowerCase())
         : true;
+
       const matchesCategory = selectedCategory
         ? row.category &&
           row.category.toLowerCase() === selectedCategory.toLowerCase()
@@ -158,6 +179,55 @@ export default function OrderTable({ rows }) {
         matchesSearch && matchesStatus && matchesCustomer && matchesCategory
       );
     });
+  };
+
+  // Calculate the filtered rows
+  const filteredRows = filterRows(rows);
+  // Calculate total pages based on filtered rows
+  const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
+
+  const handlePrevious = () => {
+    setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
+  };
+
+  const handleNext = () => {
+    setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
+  };
+
+  // Update currentItems to use filteredRows
+  const currentItems = filteredRows.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const colorMap = {
+    Delivered: "success",
+    Shipped: "primary",
+    Placed: "danger", //secondary, error, info, danger
+    Processing: "warning",
+    Canceled: "secondary",
+    Refunded: "secondary",
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchInput(event.target.value);
+    setCurrentPage(1); // Reset to the first page
+  };
+
+  // Functions to handle filter changes
+  const handleStatusChange = (event) => {
+    setSelectedStatus(event.target.value);
+    setCurrentPage(1); // Reset to the first page
+  };
+
+  const handleCategoryChange = (event) => {
+    setSelectedCategory(event.target.value);
+    setCurrentPage(1); // Reset to the first page
+  };
+
+  const handleCustomerChange = (event) => {
+    setSelectedCustomer(event.target.value);
+    setCurrentPage(1); // Reset to the first page
   };
 
   const renderFilters = () => (
@@ -170,10 +240,10 @@ export default function OrderTable({ rows }) {
           className="your-select-class"
         >
           <option value="">All</option>
-          <option value="paid">Paid</option>
-          <option value="inprocess">In Process</option>
-          <option value="refunded">Refunded</option>
-          <option value="cancelled">Cancelled</option>
+          <option value="placed">Placed</option>
+          <option value="processing">Processing</option>
+          <option value="Shipped">Shipped</option>
+          <option value="Delivered">Delivered</option>
         </select>
       </FormControl>
       <FormControl size="sm">
@@ -202,12 +272,23 @@ export default function OrderTable({ rows }) {
           className="your-select-class"
         >
           <option value="">All</option>
-          <option value="olivia">Olivia Rhye</option>
-          <option value="steve">Steve Hampton</option>
-          <option value="ciaran">Ciaran Murray</option>
-          <otion value="marina">Marina Macdonald</otion>
-          <option value="charles">Charles Fulton</option>
-          <option value="jay">Jay Hoper</option>
+          {rows
+            .reduce((unique, row) => {
+              if (
+                !unique.some((obj) => obj.customer.name === row.customer.name)
+              ) {
+                unique.push(row);
+              }
+              return unique;
+            }, [])
+            .map((row, index) => (
+              <option
+                key={index}
+                value={row.customer.name.split(" ")[0].toLowerCase()}
+              >
+                {row.customer.name}
+              </option>
+            ))}
         </select>
       </FormControl>
     </React.Fragment>
@@ -355,25 +436,27 @@ export default function OrderTable({ rows }) {
               <th style={{ width: 140, padding: "12px 6px" }}>Date</th>
               <th style={{ width: 140, padding: "12px 6px" }}>Status</th>
               <th style={{ width: 240, padding: "12px 6px" }}>Customer</th>
-              <th style={{ width: 140, padding: "12px 6px" }}> </th>
+              <th style={{ width: 140, padding: "12px 6px" }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {stableSort(
               filterRows(currentItems),
-              getComparator(order, "id")
+              getComparator(order, "orderId")
             ).map((row) => (
-              <tr key={row.id}>
+              <tr key={row.orderId}>
                 <td style={{ textAlign: "center", width: 120 }}>
                   <Checkbox
                     size="sm"
-                    checked={selected.includes(row.id)}
-                    color={selected.includes(row.id) ? "primary" : undefined}
+                    checked={selected.includes(row.orderId)}
+                    color={
+                      selected.includes(row.orderId) ? "primary" : undefined
+                    }
                     onChange={(event) => {
                       setSelected((ids) =>
                         event.target.checked
-                          ? ids.concat(row.id)
-                          : ids.filter((itemId) => itemId !== row.id)
+                          ? ids.concat(row.orderId)
+                          : ids.filter((itemId) => itemId !== row.orderId)
                       );
                     }}
                     slotProps={{ checkbox: { sx: { textAlign: "left" } } }}
@@ -381,10 +464,12 @@ export default function OrderTable({ rows }) {
                   />
                 </td>
                 <td>
-                  <Typography level="body-xs">{row.id}</Typography>
+                  <Typography level="body-xs">{row.orderId}</Typography>
                 </td>
                 <td>
-                  <Typography level="body-xs">{row.date}</Typography>
+                  <Typography level="body-xs">
+                    {new Date(row.date).toLocaleDateString("en-GB")}
+                  </Typography>
                 </td>
                 <td>
                   <Chip
@@ -392,17 +477,33 @@ export default function OrderTable({ rows }) {
                     size="sm"
                     startDecorator={
                       {
-                        Paid: <CheckRoundedIcon />,
-                        Refunded: <AutorenewRoundedIcon />,
-                        Cancelled: <BlockIcon />,
-                        InProcess: <LocalShippingIcon />,
+                        Delivered: <CheckRoundedIcon />,
+                        Processing: <AutorenewRoundedIcon />,
+                        Placed: <NewReleasesIcon />,
+                        Canceled: <BlockIcon />,
+                        Shipped: <LocalShippingIcon />,
+                        Refunded: <CurrencyExchangeIcon />,
                       }[row.status]
                     }
                     color={colorMap[row.status]}
-                    onClick={() => (window.location.href = "/")}
+                    onClick={(event) => handleClick(event, row.orderId)}
                   >
                     {row.status}
                   </Chip>
+                  <Menu
+                    anchorEl={menuAnchors[row.orderId]}
+                    open={Boolean(menuAnchors[row.orderId])}
+                    onClose={() => handleClose(row.orderId)}
+                  >
+                    {statusOptions.map((status) => (
+                      <MenuItem
+                        key={status}
+                        onClick={() => handleClose(row.orderId, status)}
+                      >
+                        {status}
+                      </MenuItem>
+                    ))}
+                  </Menu>
                 </td>
                 <td>
                   <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>

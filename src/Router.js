@@ -4,10 +4,10 @@ import Home from "./Pages/Home/Home";
 import AddCard from "./Pages/addCard/AddCard";
 import UserManage from "./Pages/userManage/UserManage";
 import BookManage from "./Pages/BookManage/BookManage";
-import Order from "./Pages/Order/Order";
+// import Order from "./Pages/Order/Order";
 import Login from "./Pages/LoginPage/Login";
 import EditBook from "./Pages/editBook/editBook";
-// import OrderDashboard from "./components/OrderBoard/OrderDashboard";
+import MuiOrder from "./Pages/Order/MuiOrder";
 
 export default function Router() {
   return (
@@ -50,7 +50,7 @@ export default function Router() {
         path="/Order"
         element={
           <ProtectedRoute>
-            <Order />
+            <MuiOrder />
           </ProtectedRoute>
         }
       />
