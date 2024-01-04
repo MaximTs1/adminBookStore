@@ -44,12 +44,21 @@ router.get("/login", authGuard, async (req, res) => {
 
 //ADD user
 router.post("/signup", async (req, res) => {
+
+  try {
+    // Check if the email already exists
+    const existingUser = await User.findOne({ email: req.body.email });
+    if (existingUser) {
+      return res.status(400).send("Email already taken, please try another email");
+    }
+
+
   const countDocument = await Counter.findByIdAndUpdate(
     { _id: "userId" },
     { $inc: { seq: 1 } },
     { new: true, upsert: true }
   );
-  try {
+  
     const user = new User({
       customId: countDocument.seq,
       firstName: req.body.firstName,
@@ -66,7 +75,7 @@ router.post("/signup", async (req, res) => {
     });
 
     const newUser = await user.save();
-    delete newUser.password;
+    delete newUser._doc.password;  //check what is this change
     res.send(newUser);
   } catch (error) {
     console.error(error); // Log the error

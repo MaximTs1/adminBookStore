@@ -15,7 +15,7 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import { GeneralContext } from "../../App";
 import Switch from "@mui/material/Switch";
 import { FormControlLabel } from "@mui/material";
-import { structure, authors, signupSchema } from "../addCard/addCardStructure";
+import { structure, signupSchema } from "../addCard/addCardStructure";
 import "../Spinner.css";
 import "../addCard/AddCard.css";
 import axios from "axios";
@@ -53,6 +53,7 @@ const EditBook = () => {
 
   const [errors, setErrors] = useState({});
   const [isValid, setIsValid] = useState(false);
+  const [authors, setAuthors] = useState([]);
   const [selectedAuthor, setSelectedAuthor] = useState(null);
 
   const handleAuthorChange = (event, newValue) => {

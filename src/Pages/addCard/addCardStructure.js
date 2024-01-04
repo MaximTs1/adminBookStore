@@ -100,40 +100,17 @@ export const pattern = new RegExp(
 );
 
 export const signupSchema = Joi.object({
-  name: Joi.string().required(),
-  author: Joi.string().required(),
-  category: Joi.string().required(),
-  price: Joi.number().required(),
+  name: Joi.string().min(2).required(),
+  author: Joi.string().min(2).required(),
+  category: Joi.string().min(2).required(),
+  price: Joi.number().min(1).required(),
   image: Joi.string().required(),
-  condition: Joi.string().required(),
-  book_parts: Joi.number().required(),
-  stock: Joi.number().required(),
-  hand: Joi.number().required(),
-  publishing_year: Joi.number().required(),
-  translation: Joi.string().required(),
-  publisher: Joi.string().required(),
-  description: Joi.string().required(),
+  condition: Joi.string().min(2).required(),
+  book_parts: Joi.number().min(1).required(),
+  stock: Joi.number().min(1).required(),
+  hand: Joi.number().min(1).required(),
+  publishing_year: Joi.number().min(1000).max(9999).required(),
+  translation: Joi.string().min(2).required(),
+  publisher: Joi.string().min(2).required(),
+  description: Joi.string().min(2).required(),
 });
-
-export const authors = [
-  {
-    value: "Choose a Author",
-    label: "Choose a Author",
-  },
-  {
-    value: "J.K Rollings",
-    label: "J.K Rollings",
-  },
-  {
-    value: "Harlen Koban",
-    label: "Harlen Koban",
-  },
-  {
-    value: "Yuval Noah Harari",
-    label: "Yuval Noah Harari",
-  },
-  {
-    value: "פאולו קואלו",
-    label: "פאולו קואלו",
-  },
-];
