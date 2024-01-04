@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
-import Autocomplete from "@mui/material/Autocomplete";
+import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -17,10 +17,11 @@ import Switch from "@mui/material/Switch";
 import { FormControlLabel } from "@mui/material";
 import { structure, signupSchema } from "../addCard/addCardStructure";
 import "../Spinner.css";
-import "../addCard/AddCard.css";
+import "./editBook.css";
 import axios from "axios";
 
 const defaultTheme = createTheme();
+const filterOptions = createFilterOptions();
 
 const EditBook = () => {
   const location = useLocation();
@@ -54,12 +55,68 @@ const EditBook = () => {
   const [errors, setErrors] = useState({});
   const [isValid, setIsValid] = useState(false);
   const [authors, setAuthors] = useState([]);
-  const [selectedAuthor, setSelectedAuthor] = useState(null);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const response = await axios.get(
+          "http://185.229.226.27:3001/api/get-books"
+        );
+        const fetchedBooks = response.data;
+
+        // Extract authors and remove duplicates
+        const extractedAuthors = fetchedBooks
+          .map((book) => book.author)
+          .filter((value, index, self) => self.indexOf(value) === index);
+
+        // Map authors to the expected format
+        const authorsData = extractedAuthors.map((author) => ({
+          title: author,
+        }));
+
+        // Optionally, add a default option
+        authorsData.unshift({ value: "", label: "Choose an Author" });
+
+        setAuthors(authorsData);
+      } catch (error) {
+        console.error("Error fetching books:", error);
+      }
+    };
+
+    fetchBooks();
+  }, []);
+
+  useEffect(() => {
+    const validationResults = signupSchema.validate(bookData, {
+      abortEarly: false,
+      allowUnknown: true,
+    });
+
+    const newErrors = {};
+    if (validationResults.error) {
+      validationResults.error.details.forEach((error) => {
+        newErrors[error.path[0]] = error.message;
+      });
+    }
+
+    setErrors(newErrors);
+    setIsValid(Object.keys(newErrors).length === 0);
+  }, [bookData]);
 
   const handleAuthorChange = (event, newValue) => {
-    setSelectedAuthor(newValue);
-    const authorValue = newValue ? newValue.label : "";
-    setBookData({ ...bookData, author: authorValue });
+    let newAuthor = "";
+
+    if (typeof newValue === "string") {
+      newAuthor = newValue;
+    } else if (newValue && newValue.inputValue) {
+      // Create a new value from the user input
+      newAuthor = newValue.inputValue;
+    } else {
+      newAuthor = newValue ? newValue.title : "";
+    }
+
+    // Update bookData with the new author
+    setBookData({ ...bookData, author: newAuthor });
   };
 
   const handleInputChange = (ev) => {
@@ -76,27 +133,7 @@ const EditBook = () => {
         reader.readAsDataURL(file);
       }
     } else {
-      const addBookData = {
-        ...bookData,
-        [name]: value,
-      };
-
-      setBookData(addBookData);
-
-      const validationResults = signupSchema.validate(addBookData, {
-        abortEarly: true,
-        allowUnknown: true,
-      });
-
-      const newErrors = {};
-
-      validationResults.error?.details.find((error) => {
-        if (error.path && error.path.length > 0 && value.trim() !== "") {
-          newErrors[error.path[0]] = error.message;
-        }
-      });
-      setErrors(newErrors);
-      setIsValid(!Object.keys(newErrors).length);
+      setBookData({ ...bookData, [name]: value });
     }
   };
 
@@ -132,7 +169,7 @@ const EditBook = () => {
 
   return (
     <div className="home">
-      <div className="Frame">
+      <div className="EditCardFrame">
         <div className="CardPreview">
           {bookData.image && (
             <img
@@ -168,7 +205,7 @@ const EditBook = () => {
                   <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                  Add Book
+                  Edit Book
                 </Typography>
                 <Box
                   component="form"
@@ -188,24 +225,47 @@ const EditBook = () => {
                           />
                         ) : s.label === "author" ? (
                           <Autocomplete
-                            disablePortal
-                            options={authors}
-                            value={bookData[s.name]}
-                            required={s.required}
+                            value={{ title: bookData.author }}
                             onChange={handleAuthorChange}
-                            sx={{
-                              width: "100%",
-                              maxWidth: { sm: 300, md: 400, lg: 500 },
+                            filterOptions={(options, params) => {
+                              const filtered = createFilterOptions()(
+                                options,
+                                params
+                              );
+
+                              const { inputValue } = params;
+                              const isExisting = options.some(
+                                (option) => inputValue === option.title
+                              );
+                              if (inputValue !== "" && !isExisting) {
+                                filtered.push({
+                                  inputValue,
+                                  title: `Add "${inputValue}"`,
+                                });
+                              }
+
+                              return filtered;
                             }}
+                            selectOnFocus
+                            clearOnBlur
+                            handleHomeEndKeys
+                            id="free-solo-with-text-demo"
+                            options={authors}
+                            getOptionLabel={(option) => {
+                              if (typeof option === "string") {
+                                return option;
+                              }
+                              if (option.inputValue) {
+                                return option.inputValue;
+                              }
+                              return option.title;
+                            }}
+                            renderOption={(props, option) => (
+                              <li {...props}>{option.title}</li>
+                            )}
+                            freeSolo
                             renderInput={(params) => (
-                              <TextField
-                                {...params}
-                                fullWidth
-                                id={s.name}
-                                label={s.label}
-                                type={s.type}
-                                name={s.name}
-                              />
+                              <TextField {...params} label="Author" />
                             )}
                           />
                         ) : (

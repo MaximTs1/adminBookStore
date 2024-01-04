@@ -3,7 +3,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -17,7 +17,6 @@ import axios from "axios";
 
 const defaultTheme = createTheme();
 const filterOptions = createFilterOptions();
-
 
 const AddCard = () => {
   const [bookData, setBookData] = useState({
@@ -38,29 +37,32 @@ const AddCard = () => {
 
   const [errors, setErrors] = useState({});
   const [isValid, setIsValid] = useState(false);
-  const [authorValue, setAuthorValue] = useState(null);
   const [authors, setAuthors] = useState([]);
-  const [value, setValue] = React.useState(null);
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await axios.get('http://185.229.226.27:3001/api/get-books');
+        const response = await axios.get(
+          "http://185.229.226.27:3001/api/get-books"
+        );
         const fetchedBooks = response.data;
 
         // Extract authors and remove duplicates
-        const extractedAuthors = fetchedBooks.map(book => book.author)
-                                              .filter((value, index, self) => self.indexOf(value) === index);
+        const extractedAuthors = fetchedBooks
+          .map((book) => book.author)
+          .filter((value, index, self) => self.indexOf(value) === index);
 
         // Map authors to the expected format
-        const authorsData = extractedAuthors.map(author => ({ title: author }));
+        const authorsData = extractedAuthors.map((author) => ({
+          title: author,
+        }));
 
         // Optionally, add a default option
-        authorsData.unshift({ value: '', label: 'Choose an Author' });
+        authorsData.unshift({ value: "", label: "Choose an Author" });
 
         setAuthors(authorsData);
       } catch (error) {
-        console.error('Error fetching books:', error);
+        console.error("Error fetching books:", error);
       }
     };
 
@@ -69,48 +71,36 @@ const AddCard = () => {
 
   useEffect(() => {
     const validationResults = signupSchema.validate(bookData, {
-        abortEarly: false,
-        allowUnknown: true,
+      abortEarly: false,
+      allowUnknown: true,
     });
 
     const newErrors = {};
     if (validationResults.error) {
-        validationResults.error.details.forEach((error) => {
-            newErrors[error.path[0]] = error.message;
-        });
+      validationResults.error.details.forEach((error) => {
+        newErrors[error.path[0]] = error.message;
+      });
     }
 
     setErrors(newErrors);
     setIsValid(Object.keys(newErrors).length === 0);
-}, [bookData]);
+  }, [bookData]);
 
+  const handleAuthorChange = (event, newValue) => {
+    let newAuthor = "";
 
-const handleAuthorChange = (event, newValue) => {
-  let newAuthor = '';
+    if (typeof newValue === "string") {
+      newAuthor = newValue;
+    } else if (newValue && newValue.inputValue) {
+      // Create a new value from the user input
+      newAuthor = newValue.inputValue;
+    } else {
+      newAuthor = newValue ? newValue.title : "";
+    }
 
-  if (typeof newValue === 'string') {
-    newAuthor = newValue;
-  } else if (newValue && newValue.inputValue) {
-    // Create a new value from the user input
-    newAuthor = newValue.inputValue;
-  } else {
-    newAuthor = newValue ? newValue.title : '';
-  }
-
-  // Update bookData with the new author
-  setBookData({ ...bookData, author: newAuthor });
-};
-
-const validateAuthor = (value) => {
-  const newErrors = { ...errors };
-  if (!value) { // Example validation check
-    newErrors.author = 'Author is required';
-  } else {
-    delete newErrors.author;
-  }
-  setErrors(newErrors);
-};
-
+    // Update bookData with the new author
+    setBookData({ ...bookData, author: newAuthor });
+  };
 
   const handleInputChange = (ev) => {
     const { name, value, files } = ev.target;
@@ -127,9 +117,8 @@ const validateAuthor = (value) => {
       }
     } else {
       setBookData({ ...bookData, [name]: value });
-   }
+    }
   };
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -213,42 +202,49 @@ const validateAuthor = (value) => {
                         ) : s.label === "author" ? (
                           // Autocomplete for author field
                           <Autocomplete
-                          value={{ title: bookData.author }}
-                          onChange={handleAuthorChange}
-  filterOptions={(options, params) => {
-    const filtered = createFilterOptions()(options, params);
+                            value={{ title: bookData.author }}
+                            onChange={handleAuthorChange}
+                            filterOptions={(options, params) => {
+                              const filtered = createFilterOptions()(
+                                options,
+                                params
+                              );
 
-    const { inputValue } = params;
-    const isExisting = options.some((option) => inputValue === option.title);
-    if (inputValue !== '' && !isExisting) {
-      filtered.push({
-        inputValue,
-        title: `Add "${inputValue}"`,
-      });
-    }
+                              const { inputValue } = params;
+                              const isExisting = options.some(
+                                (option) => inputValue === option.title
+                              );
+                              if (inputValue !== "" && !isExisting) {
+                                filtered.push({
+                                  inputValue,
+                                  title: `Add "${inputValue}"`,
+                                });
+                              }
 
-    return filtered;
-  }}
-  selectOnFocus
-  clearOnBlur
-  handleHomeEndKeys
-  id="free-solo-with-text-demo"
-  options={authors}
-  getOptionLabel={(option) => {
-    if (typeof option === 'string') {
-      return option;
-    }
-    if (option.inputValue) {
-      return option.inputValue;
-    }
-    return option.title;
-  }}
-  renderOption={(props, option) => <li {...props}>{option.title}</li>}
-  freeSolo
-  renderInput={(params) => (
-    <TextField {...params} label="Author" />
-  )}
-/>
+                              return filtered;
+                            }}
+                            selectOnFocus
+                            clearOnBlur
+                            handleHomeEndKeys
+                            id="free-solo-with-text-demo"
+                            options={authors}
+                            getOptionLabel={(option) => {
+                              if (typeof option === "string") {
+                                return option;
+                              }
+                              if (option.inputValue) {
+                                return option.inputValue;
+                              }
+                              return option.title;
+                            }}
+                            renderOption={(props, option) => (
+                              <li {...props}>{option.title}</li>
+                            )}
+                            freeSolo
+                            renderInput={(params) => (
+                              <TextField {...params} label="Author" />
+                            )}
+                          />
                         ) : (
                           // TextField for other text inputs
                           <TextField
