@@ -33,7 +33,7 @@ export const structure = [
     name: "image",
     type: "file",
     label: "image",
-    required: true,
+    required: false,
     block: false,
   },
   {

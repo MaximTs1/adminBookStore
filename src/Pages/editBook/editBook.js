@@ -29,27 +29,22 @@ const EditBook = () => {
   const navigate = useNavigate();
 
   const [bookData, setBookData] = useState(() => {
-    if (bookFromLocation) {
-      const { image, ...restOfBook } = bookFromLocation; // Destructure to exclude 'image'
-      return { ...restOfBook, image: "" }; // Spread the rest of the properties and set 'image' to ""
-    } else {
-      return {
-        customId: "",
-        name: "",
-        author: "",
-        category: "",
-        price: "",
-        image: "",
-        condition: "",
-        book_parts: "",
-        stock: "",
-        hand: "",
-        publishing_year: "",
-        translation: "",
-        publisher: "",
-        description: "",
-      };
-    }
+    return bookFromLocation ? { ...bookFromLocation } : {
+      customId: "",
+      name: "",
+      author: "",
+      category: "",
+      price: "",
+      image: "",
+      condition: "",
+      book_parts: "",
+      stock: "",
+      hand: "",
+      publishing_year: "",
+      translation: "",
+      publisher: "",
+      description: "",
+    };
   });
 
   const [errors, setErrors] = useState({});
@@ -95,7 +90,9 @@ const EditBook = () => {
     const newErrors = {};
     if (validationResults.error) {
       validationResults.error.details.forEach((error) => {
-        newErrors[error.path[0]] = error.message;
+        if (error.path[0] !== "image") { // Skip adding errors for the "image" field
+          newErrors[error.path[0]] = error.message;
+        }
       });
     }
 
@@ -121,18 +118,16 @@ const EditBook = () => {
 
   const handleInputChange = (ev) => {
     const { name, value, files } = ev.target;
-
-    if (name === "image") {
+  
+    if (name === "image" && files.length > 0) {
       const file = files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const base64String = reader.result.split(",")[1];
-          setBookData({ ...bookData, image: base64String });
-        };
-        reader.readAsDataURL(file);
-      }
-    } else {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result.split(",")[1];
+        setBookData({ ...bookData, image: base64String });
+      };
+      reader.readAsDataURL(file);
+    } else if (name !== "image") {
       setBookData({ ...bookData, [name]: value });
     }
   };

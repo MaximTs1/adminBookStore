@@ -10,7 +10,7 @@ import { TextField } from "@mui/material";
 
 const BookManage = () => {
   const [cards, setCards] = useState([]);
-  const [book, setBook] = useState(""); // State to store the fetched book
+  const [book, setBook] = useState(""); 
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const navigate = useNavigate();
@@ -123,7 +123,7 @@ const BookManage = () => {
               className="img"
               style={{
                 backgroundImage: c.image.includes("/9j")
-                  ? `url("data:image/jpeg;base64,${c.image}")` // Correctly concatenate the base64 string
+                  ? `url("data:image/jpeg;base64,${c.image}")`
                   : `url(${c.image})`,
                 border: "0",
               }}
@@ -131,12 +131,12 @@ const BookManage = () => {
             <h1>{c.title}</h1>
             <div className="my-p">
               <p>
-                <b>Phone:</b>
+                <b>Book Name:</b> <br /> 
                 {c.name}
               </p>
               <p>
-                <b>Adress:</b> {c.houseNumber} {c.street} <br /> {c.country},{" "}
-                {c.author} {c.category}
+                <b>Author:</b> <br /> 
+                {c.author} <br />  {c.category}
               </p>
               <p>
                 <b>Card Number:</b>
