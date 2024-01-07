@@ -11,7 +11,7 @@ const cartItemSchema = new mongoose.Schema({
 const dliveryInfo = new mongoose.Schema({
   fullName: String,
   email: String,
-  phone: Number,
+  phone: String,
   address: String,
   city: String,
   postalCode: Number,
@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema(
     customId: { type: Number, required: true, unique: true },
     firstName: String,
     lastName: String,
-    phone: Number,
+    phone: String,
     email: String,
     password: String,
     city: String,
