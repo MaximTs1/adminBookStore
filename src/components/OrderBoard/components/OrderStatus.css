@@ -1,0 +1,27 @@
+.order-status-bar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #f3f3f3;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+.stage {
+  text-align: center;
+}
+
+.stage.completed {
+  color: green; /* Color for completed stages */
+}
+
+.stage-symbol {
+  display: block;
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.stage-name {
+  font-size: 14px;
+}

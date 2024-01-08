@@ -22,7 +22,6 @@ import Menu from "@mui/joy/Menu";
 import MenuButton from "@mui/joy/MenuButton";
 import MenuItem from "@mui/joy/MenuItem";
 import Dropdown from "@mui/joy/Dropdown";
-
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -35,6 +34,7 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import NewReleasesIcon from "@mui/icons-material/NewReleases";
+import OrderStatusBar from "./OrderStatusBar.js";
 import "./style.css";
 
 function descendingComparator(a, b, orderBy) {
@@ -65,7 +65,7 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function RowMenu() {
+function RowMenu({ onViewOrder }) {
   return (
     <Dropdown>
       <MenuButton
@@ -75,7 +75,7 @@ function RowMenu() {
         <MoreHorizRoundedIcon />
       </MenuButton>
       <Menu size="sm" sx={{ minWidth: 140 }}>
-        <MenuItem>View Order</MenuItem>
+        <MenuItem onClick={onViewOrder}>View Order</MenuItem>
         <MenuItem>Rename</MenuItem>
         <MenuItem>Move</MenuItem>
         <Divider />
@@ -86,7 +86,7 @@ function RowMenu() {
 }
 
 export default function OrderTable({ rows }) {
-  const [anchorEl, setAnchorEl] = useState(null);
+  // const [anchorEl, setAnchorEl] = useState(null);
   // State to track the anchor of each row's menu
   const [menuAnchors, setMenuAnchors] = useState({});
   const [order, setOrder] = React.useState("desc");
@@ -99,13 +99,24 @@ export default function OrderTable({ rows }) {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const toggleOrderDetails = (order) => {
+    setSelectedOrder(order);
+    console.log("SelectedOrder", selectedOrder);
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const subtotal = selectedOrder?.cart.reduce(
+    (total, item) => total + item.price * item.amount,
+    0
+  );
+
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
   const handleClick = (event, orderId) => {
     setMenuAnchors((prevAnchors) => ({
       ...prevAnchors,
-      [orderId]: prevAnchors[orderId] ? null : event.currentTarget, // Toggle
+      [orderId]: prevAnchors[orderId] ? null : event.currentTarget,
     }));
   };
 
@@ -293,11 +304,6 @@ export default function OrderTable({ rows }) {
       </FormControl>
     </React.Fragment>
   );
-
-  const toggleOrderDetails = (order) => {
-    setSelectedOrder(order);
-    setIsModalOpen(!isModalOpen);
-  };
 
   return (
     <React.Fragment>
@@ -523,7 +529,7 @@ export default function OrderTable({ rows }) {
                     <Link level="body-xs" component="button">
                       Download
                     </Link>
-                    <RowMenu />
+                    <RowMenu onViewOrder={() => toggleOrderDetails(row)} />
                   </Box>
                 </td>
               </tr>
@@ -531,6 +537,98 @@ export default function OrderTable({ rows }) {
           </tbody>
         </Table>
       </Sheet>
+
+      {/* Modal for order details */}
+      {isModalOpen && selectedOrder && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={() => setIsModalOpen(false)}>
+              &times;
+            </span>
+            <div className="col-xl-4">
+              <div className="card checkout-order-summary">
+                <div className="card-body">
+                  <div className="p-3 bg-light mb-3">
+                    <h5
+                      className="font-size-16 mb-0"
+                      style={{ marginLeft: "5%", marginTop: "3%" }}
+                    >
+                      Order Summary
+                    </h5>
+                  </div>
+                  <div
+                    className="table-responsive"
+                    style={{ width: "200%", marginLeft: "5%" }}
+                  >
+                    <table className="table table-centered mb-0 table-nowrap custom-table">
+                      <thead>
+                        <tr>
+                          <th className="border-top-0" scope="col">
+                            Product
+                          </th>
+                          <th className="border-top-0" scope="col">
+                            Amount
+                          </th>
+                          <th className="border-top-0" scope="col">
+                            Price
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {selectedOrder.cart.map((item) => (
+                          <tr key={item.id}>
+                            <td>
+                              <img
+                                className="img"
+                                src={`data:image/jpeg;base64,${item.image}`}
+                                alt={item.name}
+                              />
+                              <p className="font-size-16 text-truncate">
+                                {item.name}
+                              </p>
+                            </td>
+                            <td>{item.amount}</td>
+                            <td>₪{item.price * item.amount}</td>
+                          </tr>
+                        ))}
+                        <tr>
+                          <td colSpan="2">
+                            <h5 className="font-size-14 m-0">Sub Total :</h5>
+                          </td>
+                          <td>₪{subtotal}</td>
+                        </tr>
+                        <tr>
+                          <td colSpan="2">
+                            <h5 className="font-size-14 m-0">
+                              Shipping Charge :
+                            </h5>
+                          </td>
+                          <td>₪{30}</td>
+                        </tr>
+                        <tr className="bg-light">
+                          <td colSpan="2">
+                            <h5 className="font-size-14 m-0">Total:</h5>
+                          </td>
+                          <td>₪{subtotal + 30}</td>
+                        </tr>
+                        <tr>
+                          <td colSpan="2">
+                            <h5 className="font-size-14 m-0">Order Status :</h5>
+                          </td>
+                          <td>
+                            <OrderStatusBar order={selectedOrder} />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Box
         className="Pagination-laptopUp"
         sx={{
