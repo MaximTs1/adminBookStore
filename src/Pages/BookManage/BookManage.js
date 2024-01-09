@@ -10,7 +10,7 @@ import { TextField } from "@mui/material";
 
 const BookManage = () => {
   const [cards, setCards] = useState([]);
-  const [book, setBook] = useState(""); 
+  const [book, setBook] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ const BookManage = () => {
 
   useEffect(() => {
     setLoader(true);
-    fetch("http://185.229.226.27:3001/api/get-books")
+    fetch("http://185.229.226.27:3001/book/get-books")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -55,7 +55,7 @@ const BookManage = () => {
 
   const fetchBookByCustomId = (customId) => {
     setLoader(true);
-    fetch(`http://185.229.226.27:3001/api/book-by-custom-id/${customId}`)
+    fetch(`http://185.229.226.27:3001/book/book-by-custom-id/${customId}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Book not found");
@@ -79,7 +79,7 @@ const BookManage = () => {
       return;
     }
     setLoader(true);
-    fetch(`http://185.229.226.27:3001/api/delete-book/${customId}`, {
+    fetch(`http://185.229.226.27:3001/book/delete-book/${customId}`, {
       method: "DELETE",
     })
       .then((response) => {
@@ -131,12 +131,12 @@ const BookManage = () => {
             <h1>{c.title}</h1>
             <div className="my-p">
               <p>
-                <b>Book Name:</b> <br /> 
+                <b>Book Name:</b> <br />
                 {c.name}
               </p>
               <p>
-                <b>Author:</b> <br /> 
-                {c.author} <br />  {c.category}
+                <b>Author:</b> <br />
+                {c.author} <br /> {c.category}
               </p>
               <p>
                 <b>Card Number:</b>

@@ -11,8 +11,6 @@ import Input from "@mui/joy/Input";
 import Modal from "@mui/joy/Modal";
 import ModalDialog from "@mui/joy/ModalDialog";
 import ModalClose from "@mui/joy/ModalClose";
-// import Select from "@mui/joy/Select";
-// import Option from "@mui/joy/Option";
 import Table from "@mui/joy/Table";
 import Sheet from "@mui/joy/Sheet";
 import Checkbox from "@mui/joy/Checkbox";
@@ -258,19 +256,18 @@ export default function OrderTable({ rows }) {
         </select>
       </FormControl>
       <FormControl size="sm">
-        <FormLabel>Delivery Status</FormLabel>
+        <FormLabel>Closed Orders</FormLabel>
         <select
           size="sm"
-          placeholder="Filter by category"
-          value={selectedCategory}
-          onChange={handleCategoryChange}
+          placeholder="Closed Orders"
+          value={selectedStatus}
+          onChange={handleStatusChange}
           className="your-select-class"
         >
           <option value="">All</option>
-          <option value="placed">Placed</option>
-          <option value="processing">Processing</option>
-          <option value="shipped">Shipped</option>
-          <option value="delivered">Delivered</option>
+          <option value="Delivered">Completed Order</option>
+          <option value="Refunded">Refunded</option>
+          <option value="canceled">Canceled</option>
         </select>
       </FormControl>
       <FormControl size="sm">
@@ -313,6 +310,9 @@ export default function OrderTable({ rows }) {
           display: { xs: "flex", sm: "none" },
           my: 1,
           gap: 1,
+          mr: -3,
+          ml: 5,
+          background: "none",
         }}
       >
         <Input
@@ -349,6 +349,7 @@ export default function OrderTable({ rows }) {
         className="SearchAndFilters-tabletUp"
         sx={{
           borderRadius: "sm",
+          ml: "5%",
           py: 2,
           display: { xs: "none", sm: "flex" },
           flexWrap: "wrap",
@@ -380,6 +381,7 @@ export default function OrderTable({ rows }) {
           flexShrink: 1,
           overflow: "auto",
           minHeight: 0,
+          ml: "5%",
         }}
       >
         <Table

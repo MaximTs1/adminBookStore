@@ -1,0 +1,9 @@
+@media screen and (max-width: 700px) {
+  .CardPreview {
+    display: none !important;
+  }
+
+  .formContainer {
+    max-width: 85% !important;
+  }
+}

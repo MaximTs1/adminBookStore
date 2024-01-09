@@ -107,3 +107,21 @@ img {
 .custom-table li {
   padding: 5px 0;
 }
+
+@media screen and (max-width: 900px) {
+  .header-orders {
+    margin-left: 3% !important;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .header-orders {
+    margin-left: 5% !important;
+  }
+}
+
+@media screen and (max-width: 658px) {
+  .header-orders {
+    margin-left: 10% !important;
+  }
+}

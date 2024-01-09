@@ -8,21 +8,21 @@ body {
 
 .AddCardFrame {
   /* position: fixed; */
-  top: 5%; 
+  top: 5%;
   left: 10%;
-  width: 80vw; 
+  width: 80vw;
   height: 90vh;
   min-height: 30vh;
   max-height: 90vh;
   background-color: rgb(179, 177, 177);
-  z-index: -1; 
-  border: 1px solid #000; 
+  z-index: -1;
+  border: 1px solid #000;
   border-radius: 20px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 20px; 
+  padding: 20px;
   overflow: auto;
 }
 
@@ -38,7 +38,7 @@ body {
   margin-right: 2vw;
   background-color: white;
   margin: auto;
-  border: 1px solid #000; 
+  border: 1px solid #000;
   border-radius: 20px;
 }
 
@@ -146,4 +146,14 @@ body {
   font-size: 45px;
   text-decoration: none !important;
   padding: 0;
+}
+
+@media screen and (max-width: 700px) {
+  .CardPreview {
+    display: none !important;
+  }
+
+  .formContainer {
+    max-width: 85% !important;
+  }
 }

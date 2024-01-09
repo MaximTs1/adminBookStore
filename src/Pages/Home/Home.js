@@ -26,7 +26,7 @@ const Home = () => {
 
   // useEffect(() => {
   //   setLoader(true);
-  //   fetch("http://185.229.226.27:3001/api/get-books")
+  //   fetch("http://185.229.226.27:3001/book/get-books")
   //     .then((response) => {
   //       if (!response.ok) {
   //         throw new Error("Network response was not ok");
@@ -77,7 +77,7 @@ const Home = () => {
   //   updatedPrizesRevealed[index] = true;
   //   setPrizesRevealed(updatedPrizesRevealed);
 
-  //   fetch(`http://185.229.226.27:3001/api/targets/${targets[index]}`, {
+  //   fetch(`http://185.229.226.27:3001/book/targets/${targets[index]}`, {
   //     method: "POST",
   //   })
   //     .then((response) => response.json())
@@ -92,7 +92,7 @@ const Home = () => {
   // };
 
   // useEffect(() => {
-  //   fetch("http://185.229.226.27:3001/api/targets")
+  //   fetch("http://185.229.226.27:3001/book/targets")
   //     .then((response) => response.json())
   //     .then((targetsFromDB) => {
   //       setTargetsReached(targetsFromDB.map((goal) => goal.isCompleted));

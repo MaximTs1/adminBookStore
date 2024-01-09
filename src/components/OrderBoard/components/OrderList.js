@@ -15,7 +15,9 @@ import Menu from "@mui/joy/Menu";
 import MenuButton from "@mui/joy/MenuButton";
 import MenuItem from "@mui/joy/MenuItem";
 import Dropdown from "@mui/joy/Dropdown";
-
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
+import NewReleasesIcon from "@mui/icons-material/NewReleases";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import BlockIcon from "@mui/icons-material/Block";
@@ -33,7 +35,7 @@ function RowMenu() {
         <MoreHorizRoundedIcon />
       </MenuButton>
       <Menu size="sm" sx={{ minWidth: 140 }}>
-        <MenuItem>Edit</MenuItem>
+        <MenuItem>View Order</MenuItem>
         <MenuItem>Rename</MenuItem>
         <MenuItem>Move</MenuItem>
         <Divider />
@@ -41,6 +43,14 @@ function RowMenu() {
       </Menu>
     </Dropdown>
   );
+}
+
+function formatDate(dateString) {
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(new Date(dateString));
 }
 
 export default function OrderList({ rows }) {
@@ -61,7 +71,19 @@ export default function OrderList({ rows }) {
     currentPage * itemsPerPage
   );
   return (
-    <Box sx={{ display: { xs: "block", sm: "none" } }}>
+    <Box
+      sx={{
+        display: {
+          xs: "block",
+          sm: "none",
+          background: "white",
+          padding: "25px",
+          overflow: "auto",
+          marginLeft: "10%",
+          marginRight: "-5%",
+        },
+      }}
+    >
       {currentItems.map((listItem) => (
         <List
           key={listItem.id}
@@ -99,8 +121,9 @@ export default function OrderList({ rows }) {
                     mb: 1,
                   }}
                 >
-                  <Typography level="body-xs">{listItem.date}</Typography>
-                  <Typography level="body-xs">&bull;</Typography>
+                  <Typography level="body-xs">
+                    {formatDate(listItem.date)}
+                  </Typography>
                   <Typography level="body-xs">{listItem.id}</Typography>
                 </Box>
                 <Box
@@ -118,16 +141,22 @@ export default function OrderList({ rows }) {
               size="sm"
               startDecorator={
                 {
-                  Paid: <CheckRoundedIcon />,
-                  Refunded: <AutorenewRoundedIcon />,
-                  Cancelled: <BlockIcon />,
+                  Delivered: <CheckRoundedIcon />,
+                  Processing: <AutorenewRoundedIcon />,
+                  Placed: <NewReleasesIcon />,
+                  Canceled: <BlockIcon />,
+                  Shipped: <LocalShippingIcon />,
+                  Refunded: <CurrencyExchangeIcon />,
                 }[listItem.status]
               }
               color={
                 {
-                  Paid: "success",
-                  Refunded: "neutral",
-                  Cancelled: "danger",
+                  Delivered: "success",
+                  Shipped: "primary",
+                  Placed: "danger", //secondary, error, info, danger
+                  Processing: "warning",
+                  Canceled: "secondary",
+                  Refunded: "secondary",
                 }[listItem.status]
               }
             >

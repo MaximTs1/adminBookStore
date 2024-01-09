@@ -43,7 +43,7 @@ const AddCard = () => {
     const fetchBooks = async () => {
       try {
         const response = await axios.get(
-          "http://185.229.226.27:3001/api/get-books"
+          "http://185.229.226.27:3001/book/get-books"
         );
         const fetchedBooks = response.data;
 
@@ -126,7 +126,7 @@ const AddCard = () => {
 
     try {
       const response = await axios.post(
-        "http://185.229.226.27:3001/api/add-book",
+        "http://185.229.226.27:3001/book/add-book",
         bookData
       );
       alert(response.data.message);

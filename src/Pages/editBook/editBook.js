@@ -29,22 +29,24 @@ const EditBook = () => {
   const navigate = useNavigate();
 
   const [bookData, setBookData] = useState(() => {
-    return bookFromLocation ? { ...bookFromLocation } : {
-      customId: "",
-      name: "",
-      author: "",
-      category: "",
-      price: "",
-      image: "",
-      condition: "",
-      book_parts: "",
-      stock: "",
-      hand: "",
-      publishing_year: "",
-      translation: "",
-      publisher: "",
-      description: "",
-    };
+    return bookFromLocation
+      ? { ...bookFromLocation }
+      : {
+          customId: "",
+          name: "",
+          author: "",
+          category: "",
+          price: "",
+          image: "",
+          condition: "",
+          book_parts: "",
+          stock: "",
+          hand: "",
+          publishing_year: "",
+          translation: "",
+          publisher: "",
+          description: "",
+        };
   });
 
   const [errors, setErrors] = useState({});
@@ -55,7 +57,7 @@ const EditBook = () => {
     const fetchBooks = async () => {
       try {
         const response = await axios.get(
-          "http://185.229.226.27:3001/api/get-books"
+          "http://185.229.226.27:3001/book/get-books"
         );
         const fetchedBooks = response.data;
 
@@ -90,7 +92,8 @@ const EditBook = () => {
     const newErrors = {};
     if (validationResults.error) {
       validationResults.error.details.forEach((error) => {
-        if (error.path[0] !== "image") { // Skip adding errors for the "image" field
+        if (error.path[0] !== "image") {
+          // Skip adding errors for the "image" field
           newErrors[error.path[0]] = error.message;
         }
       });
@@ -118,7 +121,7 @@ const EditBook = () => {
 
   const handleInputChange = (ev) => {
     const { name, value, files } = ev.target;
-  
+
     if (name === "image" && files.length > 0) {
       const file = files[0];
       const reader = new FileReader();
@@ -137,7 +140,7 @@ const EditBook = () => {
 
     try {
       const response = await fetch(
-        `http://185.229.226.27:3001/api/update-book/${bookData.customId}`,
+        `http://185.229.226.27:3001/book/update-book/${bookData.customId}`,
         {
           method: "PUT",
           headers: {

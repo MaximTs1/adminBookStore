@@ -8,7 +8,7 @@ import useScript from "./components/useScript";
 import OrderTable from "./components/OrderTable";
 import OrderList from "./components/OrderList";
 import Header from "./components/Header";
-
+import "./components/style.css";
 // const useEnhancedEffect =
 //   typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
 
@@ -73,7 +73,7 @@ export default function JoyOrderDashboardTemplate() {
               justifyContent: "space-between",
             }}
           >
-            <Typography level="h2" component="h1">
+            <Typography level="h2" component="h1" className="header-orders">
               Orders
             </Typography>
           </Box>
