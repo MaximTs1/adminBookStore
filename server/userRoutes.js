@@ -4,8 +4,11 @@ const express = require("express");
 const router = express.Router();
 const User = require("./models/User");
 const authGuard = require("./auth-guard");
-const { JWT_SECRET, getUserId } = require("./config");
+const { JWT_SECRET, JWT_FORGOT_PASSWORD, getUserId } = require("./config");
 const Counter = require("./models/Counter");
+const transporter = require("./emailService");
+const { LocalStorage } = require("node-localstorage");
+const localStorage = new LocalStorage("./scratch");
 
 // GET all users weithout authguard - needs auth to all manager
 router.get("/all-users", async (req, res) => {
@@ -97,7 +100,10 @@ router.post("/login", async (req, res) => {
   }
 
   const userResult = user.toObject();
+
   delete userResult.password;
+  delete userResult.email;
+
   userResult.token = jwt.sign({ id: userResult._id }, JWT_SECRET, {
     expiresIn: "1h",
   });
@@ -321,6 +327,109 @@ router.put("/update-password", async (req, res) => {
   } catch (error) {
     console.error("Error updating password:", error);
     res.status(500).send("Internal server error");
+  }
+});
+
+router.post("/forgot-password", async (req, res) => {
+  const { email } = req.body;
+
+  // 1. Check if user exists
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.send(
+      "If your email is registered, you will receive a password reset link."
+    );
+  }
+
+  // 2. Create a reset token (pseudo code)
+  const token = jwt.sign({ id: user._id }, JWT_FORGOT_PASSWORD, {
+    expiresIn: "1h",
+  });
+  // console.log("the rise of token:", token);
+  // user.token = token;
+  // Store the token in localStorage
+  localStorage.setItem("authToken", token);
+  // console.log("user.token:", user.token);
+  // console.log("tttt");
+  // console.log("tttt");
+  console.log("token:", token);
+
+  // try {
+  //   await user.save();
+  // } catch (error) {
+  //   console.error("Error saving user:", error);
+  //   return res.status(500).send("Error processing request");
+  // }
+
+  // Use the transporter to send an email
+  const resetUrl = `http://localhost:3001/changepasswordlandingpage?token=${token}`;
+
+  const mailOptions = {
+    from: "ariellabooks123@hotmail.com",
+    to: user.email,
+    subject: "Password Reset",
+    html: `<p>You requested a password reset</p><p>Click this <a href="${resetUrl}">link</a> to set a new password.</p>`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.send("Password reset link has been sent to your email.");
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).send("Error in sending password reset link");
+  }
+});
+//
+//
+//
+router.post("/reset-password", async (req, res) => {
+  const { token, resetPassword } = req.body;
+
+  if (!token || !resetPassword) {
+    return res.status(400).send("Token and new password are required.");
+  }
+
+  try {
+    // Verify the token
+    const decoded = jwt.verify(token, JWT_FORGOT_PASSWORD); // Replace with your JWT secret
+    const userId = decoded.id;
+
+    // Find the user by ID
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).send("User not found.");
+    }
+    // console.log("user.token:", user.token);
+    // console.log("token:", token);
+    console.log("tttt");
+    console.log("tttt");
+    console.log("tttt");
+
+    // Retrieve the token from sessionStorage
+    const storedToken = localStorage.getItem("authToken");
+    console.log("storedToken", storedToken);
+
+    // Check if the token has expired
+    if (storedToken !== token) {
+      return res.status(400).send("Token is invalid.");
+    }
+
+    if (user.tokenExpiration < Date.now()) {
+      return res.status(400).send("Token has expired.");
+    }
+
+    // Update the user's password
+    // Hash the new password before saving (use a library like bcrypt)
+    user.password = await bcrypt.hash(resetPassword, 10); // Example using bcrypt
+    user.token = undefined; // Clear the reset token
+    user.tokenExpiration = undefined; // Clear the token expiration
+    await user.save();
+
+    // res.send("Password has been successfully reset.");
+    return res.send("Password has been successfully reset.");
+  } catch (error) {
+    console.error("Reset password error:", error);
+    return res.status(500).send("Error resetting password.");
   }
 });
 
