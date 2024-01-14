@@ -6,9 +6,10 @@ const User = require("./models/User");
 const authGuard = require("./auth-guard");
 const { JWT_SECRET, JWT_FORGOT_PASSWORD, getUserId } = require("./config");
 const Counter = require("./models/Counter");
-const transporter = require("./emailService");
+// const transporter = require("./emailService");
 const { LocalStorage } = require("node-localstorage");
 const localStorage = new LocalStorage("./scratch");
+const { loginSchema } = require("./JoiValidation");
 
 // GET all users weithout authguard - needs auth to all manager
 router.get("/all-users", async (req, res) => {
@@ -92,6 +93,12 @@ router.post("/login", async (req, res) => {
 
   if (!user) {
     return res.status(403).send("username or password is incorrect");
+  }
+
+  const schema = loginSchema.validate(req.body, { allowUnknown: true });
+
+  if (schema.error) {
+    return res.status(409).send(schema.error.details[0].message);
   }
 
   const passwordMatch = await bcrypt.compare(password, user.password);
@@ -330,55 +337,55 @@ router.put("/update-password", async (req, res) => {
   }
 });
 
-router.post("/forgot-password", async (req, res) => {
-  const { email } = req.body;
+// router.post("/forgot-password", async (req, res) => {
+//   const { email } = req.body;
 
-  // 1. Check if user exists
-  const user = await User.findOne({ email });
-  if (!user) {
-    return res.send(
-      "If your email is registered, you will receive a password reset link."
-    );
-  }
+//   // 1. Check if user exists
+//   const user = await User.findOne({ email });
+//   if (!user) {
+//     return res.send(
+//       "If your email is registered, you will receive a password reset link."
+//     );
+//   }
 
-  // 2. Create a reset token (pseudo code)
-  const token = jwt.sign({ id: user._id }, JWT_FORGOT_PASSWORD, {
-    expiresIn: "1h",
-  });
-  // console.log("the rise of token:", token);
-  // user.token = token;
-  // Store the token in localStorage
-  localStorage.setItem("authToken", token);
-  // console.log("user.token:", user.token);
-  // console.log("tttt");
-  // console.log("tttt");
-  console.log("token:", token);
+//   // 2. Create a reset token (pseudo code)
+//   const token = jwt.sign({ id: user._id }, JWT_FORGOT_PASSWORD, {
+//     expiresIn: "1h",
+//   });
+//   // console.log("the rise of token:", token);
+//   // user.token = token;
+//   // Store the token in localStorage
+//   localStorage.setItem("authToken", token);
+//   // console.log("user.token:", user.token);
+//   // console.log("tttt");
+//   // console.log("tttt");
+//   console.log("token:", token);
 
-  // try {
-  //   await user.save();
-  // } catch (error) {
-  //   console.error("Error saving user:", error);
-  //   return res.status(500).send("Error processing request");
-  // }
+//   // try {
+//   //   await user.save();
+//   // } catch (error) {
+//   //   console.error("Error saving user:", error);
+//   //   return res.status(500).send("Error processing request");
+//   // }
 
-  // Use the transporter to send an email
-  const resetUrl = `http://localhost:3001/changepasswordlandingpage?token=${token}`;
+//   // Use the transporter to send an email
+//   const resetUrl = `http://localhost:3001/changepasswordlandingpage?token=${token}`;
 
-  const mailOptions = {
-    from: "ariellabooks123@hotmail.com",
-    to: user.email,
-    subject: "Password Reset",
-    html: `<p>You requested a password reset</p><p>Click this <a href="${resetUrl}">link</a> to set a new password.</p>`,
-  };
+//   const mailOptions = {
+//     from: "ariellabooks123@hotmail.com",
+//     to: user.email,
+//     subject: "Password Reset",
+//     html: `<p>You requested a password reset</p><p>Click this <a href="${resetUrl}">link</a> to set a new password.</p>`,
+//   };
 
-  try {
-    await transporter.sendMail(mailOptions);
-    res.send("Password reset link has been sent to your email.");
-  } catch (error) {
-    console.error("Error sending email:", error);
-    res.status(500).send("Error in sending password reset link");
-  }
-});
+//   try {
+//     await transporter.sendMail(mailOptions);
+//     res.send("Password reset link has been sent to your email.");
+//   } catch (error) {
+//     console.error("Error sending email:", error);
+//     res.status(500).send("Error in sending password reset link");
+//   }
+// });
 //
 //
 //

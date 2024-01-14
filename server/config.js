@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = "FullStackW050323MyTokenMagnivMeod";
 const JWT_FORGOT_PASSWORD = "NowWeNeedToGetUNewPassword";
+const JWT_ADMIN = "NoBODYeVVER45WillGuessAdminpassmuhahahaaa1";
 
 const getUserId = (req, res) => {
   if (!req.headers.authorization) {
@@ -18,5 +19,6 @@ const getUserId = (req, res) => {
 
 exports.JWT_SECRET = JWT_SECRET;
 exports.JWT_FORGOT_PASSWORD = JWT_FORGOT_PASSWORD;
+exports.JWT_ADMIN = JWT_ADMIN;
 
 exports.getUserId = getUserId;

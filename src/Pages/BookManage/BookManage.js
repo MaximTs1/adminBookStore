@@ -1,34 +1,23 @@
-import React from "react";
-import { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "./bookManage.css";
 import { FaRegEdit } from "react-icons/fa";
-import { BsFillHeartFill, BsFillTrash3Fill } from "react-icons/bs";
+import { BsFillTrash3Fill } from "react-icons/bs";
 import { AiOutlineExpand } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import { GeneralContext } from "../../App";
-import { TextField } from "@mui/material";
+import { TextField, Button } from "@mui/material";
 
 const BookManage = () => {
   const [cards, setCards] = useState([]);
   const [book, setBook] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const navigate = useNavigate();
-  const { setLoader, snackbar } = useContext(GeneralContext);
+  const { setLoader } = useContext(GeneralContext);
 
   const handleSearchChange = (event) => {
-    const query = event.target.value.toLowerCase();
-    setSearchQuery(query);
-
-    const filtered = cards.filter(
-      (card) =>
-        query === "" ||
-        card.name.toLowerCase().includes(query) ||
-        card.author.toLowerCase().includes(query) ||
-        card.publisher.toLowerCase().includes(query)
-    );
-
-    setFilteredData(filtered);
+    setSearchQuery(event.target.value.toLowerCase());
   };
 
   useEffect(() => {
@@ -51,7 +40,32 @@ const BookManage = () => {
         );
       })
       .finally(() => setLoader(false));
-  }, []);
+  }, [setLoader]);
+
+  useEffect(() => {
+    let filtered = cards;
+
+    if (selectedCategory === "outOfStock") {
+      filtered = filtered.filter((card) => card.stock === 0);
+    } else if (selectedCategory === "mostFavorite") {
+      // Add your logic to determine 'mostFavorite' here
+    }
+
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (card) =>
+          card.name.toLowerCase().includes(searchQuery) ||
+          card.author.toLowerCase().includes(searchQuery) ||
+          card.publisher.toLowerCase().includes(searchQuery)
+      );
+    }
+
+    setFilteredData(filtered);
+  }, [selectedCategory, searchQuery, cards]);
+
+  const handleAllBooksClick = () => setSelectedCategory("all");
+  const handleOutOfStockClick = () => setSelectedCategory("outOfStock");
+  const handleMostFavoriteClick = () => setSelectedCategory("mostFavorite");
 
   const fetchBookByCustomId = (customId) => {
     setLoader(true);
@@ -116,6 +130,17 @@ const BookManage = () => {
           sx={{ mb: -4, mt: 1 }}
         />
       </div>
+
+      <Button variant="contained" onClick={handleAllBooksClick}>
+        All Books
+      </Button>
+      <Button variant="contained" onClick={handleOutOfStockClick}>
+        Books out of stock
+      </Button>
+      <Button variant="contained" onClick={handleMostFavoriteClick}>
+        Most favorite
+      </Button>
+
       <div className="Cardframe">
         {filteredData.map((c) => (
           <div key={c.customId} className="Card3">
@@ -146,17 +171,7 @@ const BookManage = () => {
             <div className="myIcons">
               <div className="icons1">
                 <span> </span>
-                <span
-                  className="Expand"
-                  onClick={() => fetchBookByCustomId(c.customId)}
-                >
-                  <FaRegEdit size={26} />
-                </span>
-                <Link to={`/cards/${c.customId}`}>
-                  <span className="Expand">
-                    <AiOutlineExpand size={26} />
-                  </span>
-                </Link>
+                {/* Icons and Link here */}
               </div>
               <div className="sep"></div>
               <div className="icons2">

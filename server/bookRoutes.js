@@ -103,33 +103,6 @@ router.delete("/delete-book/:customId", async (req, res) => {
   }
 });
 
-router.get("/targets", async (req, res) => {
-  try {
-    const targets = await Target.find();
-    res.json(targets);
-  } catch (error) {
-    res.status(500).send("Error retrieving targets");
-  }
-});
-
-router.post("/targets/:goal", async (req, res) => {
-  const goalNumber = parseInt(req.params.goal);
-  try {
-    const updatedTarget = await Target.findOneAndUpdate(
-      { goal: goalNumber },
-      { isCompleted: true },
-      { new: true }
-    );
-    if (updatedTarget) {
-      res.json(updatedTarget);
-    } else {
-      res.status(404).send("Goal not found");
-    }
-  } catch (error) {
-    res.status(500).send("Error updating goal");
-  }
-});
-
 router.post("/login-manager", async (req, res) => {
   const { email, password } = req.body;
   const manager = await Manager.findOne({ email: email });
@@ -143,25 +116,26 @@ router.post("/login-manager", async (req, res) => {
   }
 });
 
-router.post('/update-stock', async (req, res) => {
+router.post("/update-stock", async (req, res) => {
   try {
-      const purchasedItems = req.body; 
+    const purchasedItems = req.body;
 
-      // Update stock for each purchased item
-      await Promise.all(purchasedItems.map(item => {
-          return Book.findOneAndUpdate(
-              { customId: item.customId },
-              { $inc: { stock: - item.amount } },
-              { new: true }
-          );
-      }));
+    // Update stock for each purchased item
+    await Promise.all(
+      purchasedItems.map((item) => {
+        return Book.findOneAndUpdate(
+          { customId: item.customId },
+          { $inc: { stock: -item.amount } },
+          { new: true }
+        );
+      })
+    );
 
-      res.status(200).send('Stock updated successfully');
+    res.status(200).send("Stock updated successfully");
   } catch (error) {
-      console.error("Error updating stock: ", error);
-      res.status(500).send('Error updating stock');
+    console.error("Error updating stock: ", error);
+    res.status(500).send("Error updating stock");
   }
 });
-
 
 module.exports = router;

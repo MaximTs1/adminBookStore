@@ -85,37 +85,37 @@ const DashboardDefault = () => {
       <Grid item xs={12} sm={6} md={4} lg={3}>
         <AnalyticEcommerce
           title="Total Page Views"
-          count="4,42,236"
-          percentage={59.3}
-          extra="35,000"
+          count="14,277"
+          percentage={89.3}
+          extra="6735"
         />
       </Grid>
       <Grid item xs={12} sm={6} md={4} lg={3}>
         <AnalyticEcommerce
           title="Total Users"
-          count="78,250"
-          percentage={70.5}
-          extra="8,900"
+          count="1439"
+          percentage={275.6}
+          extra="917"
         />
       </Grid>
       <Grid item xs={12} sm={6} md={4} lg={3}>
         <AnalyticEcommerce
           title="Total Order"
-          count="18,800"
-          percentage={27.4}
+          count="565"
+          percentage={-27.4}
           isLoss
           color="warning"
-          extra="1,943"
+          extra="-213"
         />
       </Grid>
       <Grid item xs={12} sm={6} md={4} lg={3}>
         <AnalyticEcommerce
           title="Total Sales"
-          count="$35,078"
-          percentage={27.4}
+          count="49,223₪"
+          percentage={-5.22}
           isLoss
           color="warning"
-          extra="$20,395"
+          extra="15,459₪"
         />
       </Grid>
 
@@ -171,7 +171,7 @@ const DashboardDefault = () => {
               <Typography variant="h6" color="textSecondary">
                 This Week Statistics
               </Typography>
-              <Typography variant="h3">$7,650</Typography>
+              <Typography variant="h3">587₪</Typography>
             </Stack>
           </Box>
           <MonthlyBarChart />

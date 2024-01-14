@@ -35,34 +35,6 @@ import NewReleasesIcon from "@mui/icons-material/NewReleases";
 import OrderStatusBar from "./OrderStatusBar.js";
 import "./style.css";
 
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
 function RowMenu({ onViewOrder }) {
   return (
     <Dropdown>
@@ -160,7 +132,22 @@ export default function OrderTable({ rows }) {
     "Refunded",
   ];
 
-  // Function to filter rows based on search input fdbgzfdbfddsfhsdfdfshdfh
+  const sortOrder = (rows) => {
+    if (order === "desc") {
+      rows = rows?.sort((a, b) => b.orderId - a.orderId);
+    } else {
+      rows = rows?.sort((a, b) => a.orderId - b.orderId);
+    }
+
+    rows = rows?.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+    );
+
+    return rows;
+  };
+
+  // Function to filter rows based on search input
   const filterRows = (rows) => {
     return rows.filter((row) => {
       const matchesSearch = row.customer.name
@@ -204,10 +191,7 @@ export default function OrderTable({ rows }) {
   };
 
   // Update currentItems to use filteredRows
-  const currentItems = filteredRows.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const currentItems = filteredRows;
 
   const colorMap = {
     Delivered: "success",
@@ -448,10 +432,7 @@ export default function OrderTable({ rows }) {
             </tr>
           </thead>
           <tbody>
-            {stableSort(
-              filterRows(currentItems),
-              getComparator(order, "orderId")
-            ).map((row) => (
+            {filterRows(sortOrder(currentItems)).map((row) => (
               <tr key={row.orderId}>
                 <td style={{ textAlign: "center", width: 120 }}>
                   <Checkbox
