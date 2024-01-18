@@ -10,7 +10,8 @@ My name is Maxim Tsvetkov and welcome to my ecommerce shop and my final HackerU 
 - About this project:
   I created 2 different websites - one for the clients and one for the admin. <br/>
   The admin web site was created to laptop purposes, so its responsibility is a bit limited. <br/>
-  The reason it was created is that way - was the need of the client for big screen view (sight problems ..). This why I tried to create a different website with more fitchers and less responsible.<br/>
+  The reason it was created is that way - was the need of the client for big screen view (sight problems ..). <br/>
+  This why I tried to create a different website with more fitchers and less responsible.<br/>
   The admin will be able to controll the inventory and easily upload new items and control the orders. <br/>
   Both the admin and the client web sites are synchronized and live information between the seller and the client will be available.
 
