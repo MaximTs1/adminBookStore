@@ -153,10 +153,14 @@
 }
 
 .sep {
-  width: 60%;
+  width: 80%;
 }
 .Expand:hover {
   transition: 0.3s;
   scale: 1.09;
   color: rgb(13, 31, 197);
+}
+
+.buttons {
+  display: sticky;
 }

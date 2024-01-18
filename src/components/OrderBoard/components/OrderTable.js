@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@mui/joy/Avatar";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
@@ -68,12 +68,17 @@ export default function OrderTable({ rows }) {
   const [selectedCustomer, setSelectedCustomer] = React.useState("");
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentRows, setCurrentRows] = useState(rows);
 
   const toggleOrderDetails = (order) => {
     setSelectedOrder(order);
     console.log("SelectedOrder", selectedOrder);
     setIsModalOpen(!isModalOpen);
   };
+
+  useEffect(() => {
+    setCurrentRows(rows);
+  }, [rows]);
 
   const subtotal = selectedOrder?.cart.reduce(
     (total, item) => total + item.price * item.amount,
@@ -116,8 +121,20 @@ export default function OrderTable({ rows }) {
       );
 
       const result = await response.json();
-      console.log(result);
-      // Handle the response, update local state, etc.
+      // If the update was successful, update the local state
+      if (response.ok) {
+        const updatedRows = currentRows.map((row) => {
+          if (row.orderId === orderId) {
+            return { ...row, status: newStatus }; // Update the status of the specific order
+          }
+          return row; // Return unmodified for all other orders
+        });
+
+        setCurrentRows(updatedRows); // Update the state with the modified rows
+      } else {
+        // Handle errors or unsuccessful updates
+        console.error("Failed to update order status:", result);
+      }
     } catch (error) {
       console.error("Error updating order status:", error);
     }
@@ -191,7 +208,7 @@ export default function OrderTable({ rows }) {
   };
 
   // Update currentItems to use filteredRows
-  const currentItems = filteredRows;
+  const currentItems = currentRows;
 
   const colorMap = {
     Delivered: "success",

@@ -24,7 +24,6 @@ export default function JoyOrderDashboardTemplate() {
           throw new Error("Network response was not ok");
         }
         const ordersData = await response.json();
-        console.log("ordersData: ", ordersData);
         setRows(ordersData);
       } catch (error) {
         console.error("Fetch error:", error);

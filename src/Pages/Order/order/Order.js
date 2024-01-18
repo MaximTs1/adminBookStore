@@ -35,8 +35,6 @@ const Order = () => {
   };
 
   const updateOrderStatus = async (orderId, newStatus) => {
-    console.log("orderId client: ", orderId);
-    console.log("newStatus client: ", newStatus);
     try {
       const response = await fetch(
         `http://185.229.226.27:3001/user/updateOrderStatus/${orderId}`,

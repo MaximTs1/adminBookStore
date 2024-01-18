@@ -15,13 +15,13 @@ const BookManage = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const navigate = useNavigate();
   const { setLoader } = useContext(GeneralContext);
+  const [allUsers, setallUsers] = useState([]);
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value.toLowerCase());
   };
 
   useEffect(() => {
-    setLoader(true);
     fetch("http://185.229.226.27:3001/book/get-books")
       .then((response) => {
         if (!response.ok) {
@@ -40,15 +40,72 @@ const BookManage = () => {
         );
       })
       .finally(() => setLoader(false));
-  }, [setLoader]);
+  }, []);
 
   useEffect(() => {
-    let filtered = cards;
+    fetch("http://185.229.226.27:3001/user/all-users")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setallUsers(data);
+      })
+      .catch((error) => {
+        console.error(
+          "There has been a problem with your fetch operation:",
+          error
+        );
+      });
+  }, []);
+
+  useEffect(() => {
+    let filtered = [...cards];
 
     if (selectedCategory === "outOfStock") {
       filtered = filtered.filter((card) => card.stock === 0);
     } else if (selectedCategory === "mostFavorite") {
-      // Add your logic to determine 'mostFavorite' here
+      const filteredMostFavoriteBooks = new Array(filtered.length).fill(0);
+      allUsers.forEach((user) => {
+        user.likedBooks.forEach((bookNumber) => {
+          // Check if the bookNumber is between 1 and 10
+          if (
+            bookNumber >= 1 &&
+            bookNumber <= filtered[filtered.length - 1].customId
+          ) {
+            // Increment the count for this bookNumber in filteredMostFavoriteBooks
+            filteredMostFavoriteBooks[bookNumber - 1]++; // Subtract 1 to convert bookNumber to array index
+          }
+        });
+      });
+      // Transform filteredMostFavoriteBooks into an array of objects with book number and count
+      const booksWithCounts = filteredMostFavoriteBooks.map((count, index) => ({
+        bookNumber: index + 1, // Add 1 because book numbers start at 1, not 0
+        count,
+      }));
+
+      // Sort the array of objects based on the count, in descending order
+      const sortedBooks = booksWithCounts.sort((a, b) => b.count - a.count);
+
+      // Create a mapping from book number to its rank based on popularity
+      const popularityRank = {};
+      sortedBooks.forEach((book, index) => {
+        popularityRank[book.bookNumber] = index;
+      });
+
+      // Sort the filtered array in place based on the popularity rank
+      filtered.sort((a, b) => {
+        // Adjusting book numbers to array indices
+        let rankA = popularityRank[a.customId];
+        let rankB = popularityRank[b.customId];
+
+        // Compare based on popularity rank
+        return rankA - rankB;
+      });
+    } else if (selectedCategory === "all") {
+      // If 'All Books' is selected, 'filtered' should already be a copy of 'cards'
     }
 
     if (searchQuery) {
@@ -79,7 +136,6 @@ const BookManage = () => {
       .then((book) => {
         const { image, ...bookWithoutImage } = book;
         setBook(bookWithoutImage);
-        console.log("bookWithoutImage:", bookWithoutImage);
         navigate("/editCard", { state: { book: bookWithoutImage } });
       })
       .catch((error) => {
@@ -130,17 +186,24 @@ const BookManage = () => {
           sx={{ mb: -4, mt: 1 }}
         />
       </div>
-
-      <Button variant="contained" onClick={handleAllBooksClick}>
-        All Books
-      </Button>
-      <Button variant="contained" onClick={handleOutOfStockClick}>
-        Books out of stock
-      </Button>
-      <Button variant="contained" onClick={handleMostFavoriteClick}>
-        Most favorite
-      </Button>
-
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: "45px",
+        }}
+      >
+        <Button variant="contained" onClick={handleAllBooksClick}>
+          All Books
+        </Button>
+        <Button variant="contained" onClick={handleOutOfStockClick}>
+          Books out of stock
+        </Button>
+        <Button variant="contained" onClick={handleMostFavoriteClick}>
+          Most favorite
+        </Button>
+      </div>
       <div className="Cardframe">
         {filteredData.map((c) => (
           <div key={c.customId} className="Card3">
@@ -171,7 +234,17 @@ const BookManage = () => {
             <div className="myIcons">
               <div className="icons1">
                 <span> </span>
-                {/* Icons and Link here */}
+                <span
+                  className="Expand"
+                  onClick={() => fetchBookByCustomId(c.customId)}
+                >
+                  <FaRegEdit size={26} />
+                </span>
+                {/* <Link to={`/cards/${c.customId}`}>
+                  <span className="Expand">
+                    <AiOutlineExpand size={26} />
+                  </span>
+                </Link> */}
               </div>
               <div className="sep"></div>
               <div className="icons2">

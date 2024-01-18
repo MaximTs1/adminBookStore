@@ -44,7 +44,6 @@ export default function Login() {
       email: data.get("email"),
       password: data.get("password"),
     };
-    console.log("data", loginDetails);
     fetch("http://185.229.226.27:3001/book/login-manager", {
       // credentials: "include",
       method: "POST",

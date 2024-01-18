@@ -46,7 +46,6 @@ const UserManage = () => {
       .then((data) => {
         setUsers(data);
         setFilteredData(data);
-        console.log("data:", data);
       })
       .catch((error) => {
         console.error(

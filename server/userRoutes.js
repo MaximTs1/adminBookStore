@@ -109,7 +109,7 @@ router.post("/login", async (req, res) => {
   const userResult = user.toObject();
 
   delete userResult.password;
-  delete userResult.email;
+  // delete userResult.email;
 
   userResult.token = jwt.sign({ id: userResult._id }, JWT_SECRET, {
     expiresIn: "1h",
@@ -352,15 +352,9 @@ router.put("/update-password", async (req, res) => {
 //   const token = jwt.sign({ id: user._id }, JWT_FORGOT_PASSWORD, {
 //     expiresIn: "1h",
 //   });
-//   // console.log("the rise of token:", token);
 //   // user.token = token;
 //   // Store the token in localStorage
 //   localStorage.setItem("authToken", token);
-//   // console.log("user.token:", user.token);
-//   // console.log("tttt");
-//   // console.log("tttt");
-//   console.log("token:", token);
-
 //   // try {
 //   //   await user.save();
 //   // } catch (error) {
@@ -406,15 +400,9 @@ router.post("/reset-password", async (req, res) => {
     if (!user) {
       return res.status(404).send("User not found.");
     }
-    // console.log("user.token:", user.token);
-    // console.log("token:", token);
-    console.log("tttt");
-    console.log("tttt");
-    console.log("tttt");
 
     // Retrieve the token from sessionStorage
     const storedToken = localStorage.getItem("authToken");
-    console.log("storedToken", storedToken);
 
     // Check if the token has expired
     if (storedToken !== token) {

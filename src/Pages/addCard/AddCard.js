@@ -122,7 +122,6 @@ const AddCard = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("bookData", bookData);
 
     try {
       const response = await axios.post(
