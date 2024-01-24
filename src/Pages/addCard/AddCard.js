@@ -265,7 +265,7 @@ const AddCard = () => {
                   <Button
                     className={`spinner-button ${isValid ? "valid" : ""}`}
                     disabled={!isValid}
-                    display={!isValid}
+                    // display={!isValid}
                     style={{ display: isValid ? "none" : "" }}
                     sx={{ mt: 2, mb: 0 }}
                   >

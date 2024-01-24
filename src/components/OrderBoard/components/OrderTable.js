@@ -293,6 +293,7 @@ export default function OrderTable({ rows }) {
             .map((row, index) => (
               <option
                 key={index}
+                // key={row.customer.email}
                 value={row.customer.name.split(" ")[0].toLowerCase()}
               >
                 {row.customer.name}
@@ -503,6 +504,7 @@ export default function OrderTable({ rows }) {
                   >
                     {statusOptions.map((status) => (
                       <MenuItem
+                        // key={status}
                         key={status}
                         onClick={() => handleClose(row.orderId, status)}
                       >
@@ -683,7 +685,7 @@ export default function OrderTable({ rows }) {
           size="sm"
           onClick={handleNext}
           disabled={currentPage === totalPages}
-          startIcon={<KeyboardArrowRightIcon />}
+          // startIcon={<KeyboardArrowRightIcon />}
           sx={{
             display: "inline-flex", // Ensures icon and text are inline
             alignItems: "center", // Aligns items vertically

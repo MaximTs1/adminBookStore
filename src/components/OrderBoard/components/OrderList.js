@@ -84,88 +84,90 @@ export default function OrderList({ rows }) {
         },
       }}
     >
-      {currentItems.map((listItem) => (
-        <List
-          key={listItem.id}
-          size="sm"
-          sx={{
-            "--ListItem-paddingX": 0,
-          }}
-        >
-          <ListItem
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "start",
-            }}
-          >
-            <ListItemContent
-              sx={{ display: "flex", gap: 2, alignItems: "start" }}
+      <List size="sm" sx={{ "--ListItem-paddingX": 0 }}>
+        {currentItems.map((listItem) => (
+          <React.Fragment key={listItem.orderId}>
+            <ListItem
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "start",
+              }}
             >
-              <ListItemDecorator>
-                <Avatar size="sm">{listItem.customer.initial}</Avatar>
-              </ListItemDecorator>
-              <div>
-                <Typography fontWeight={600} gutterBottom>
-                  {listItem.customer.name}
-                </Typography>
-                <Typography level="body-xs" gutterBottom>
-                  {listItem.customer.email}
-                </Typography>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: 0.5,
-                    mb: 1,
-                  }}
-                >
-                  <Typography level="body-xs">
-                    {formatDate(listItem.date)}
+              <ListItemContent
+                sx={{ display: "flex", gap: 2, alignItems: "start" }}
+              >
+                <ListItemDecorator>
+                  <Avatar size="sm">{listItem.customer.initial}</Avatar>
+                </ListItemDecorator>
+                <div>
+                  <Typography fontWeight={600} gutterBottom>
+                    {listItem.customer.name}
                   </Typography>
-                  <Typography level="body-xs">{listItem.id}</Typography>
-                </Box>
-                <Box
-                  sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}
-                >
-                  <Link level="body-sm" component="button">
-                    Download
-                  </Link>
-                  <RowMenu />
-                </Box>
-              </div>
-            </ListItemContent>
-            <Chip
-              variant="soft"
-              size="sm"
-              startDecorator={
-                {
-                  Delivered: <CheckRoundedIcon />,
-                  Processing: <AutorenewRoundedIcon />,
-                  Placed: <NewReleasesIcon />,
-                  Canceled: <BlockIcon />,
-                  Shipped: <LocalShippingIcon />,
-                  Refunded: <CurrencyExchangeIcon />,
-                }[listItem.status]
-              }
-              color={
-                {
-                  Delivered: "success",
-                  Shipped: "primary",
-                  Placed: "danger", //secondary, error, info, danger
-                  Processing: "warning",
-                  Canceled: "secondary",
-                  Refunded: "secondary",
-                }[listItem.status]
-              }
-            >
-              {listItem.status}
-            </Chip>
-          </ListItem>
-          <ListDivider />
-        </List>
-      ))}
+                  <Typography level="body-xs" gutterBottom>
+                    {listItem.customer.email}
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: 0.5,
+                      mb: 1,
+                    }}
+                  >
+                    <Typography level="body-xs">
+                      {formatDate(listItem.date)}
+                    </Typography>
+                    <Typography level="body-xs">{listItem.id}</Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                      mb: 1,
+                    }}
+                  >
+                    <Link level="body-sm" component="button">
+                      Download
+                    </Link>
+                    <RowMenu />
+                  </Box>
+                </div>
+              </ListItemContent>
+              <Chip
+                variant="soft"
+                size="sm"
+                startDecorator={
+                  {
+                    Delivered: <CheckRoundedIcon />,
+                    Processing: <AutorenewRoundedIcon />,
+                    Placed: <NewReleasesIcon />,
+                    Canceled: <BlockIcon />,
+                    Shipped: <LocalShippingIcon />,
+                    Refunded: <CurrencyExchangeIcon />,
+                  }[listItem.status]
+                }
+                color={
+                  {
+                    Delivered: "success",
+                    Shipped: "primary",
+                    Placed: "danger", //secondary, error, info, danger
+                    Processing: "warning",
+                    Canceled: "secondary",
+                    Refunded: "secondary",
+                  }[listItem.status]
+                }
+              >
+                {listItem.status}
+              </Chip>
+            </ListItem>
+            <ListDivider />
+          </React.Fragment>
+        ))}
+      </List>
+
       <Box
         className="Pagination-mobile"
         sx={{
