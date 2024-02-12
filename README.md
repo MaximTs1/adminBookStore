@@ -2,6 +2,10 @@ Hi !
 
 My name is Maxim Tsvetkov and welcome to my ecommerce shop and my final HackerU Full-Stack project !
 
+**UPDATE !!**
+THE SERVER IS ALWAYS ON, SO YOU DO NOT NEED TO START IT WITH PUTTY. FOR ANY PROBLEM - USE PUTTY.
+**UPDATE !!**
+
 - Interduction:
   This project is designed for a neighbor of mine - Ariella, that long time ago asked me to create a new project that will help her sell her many books that she read and collected among the years.<br/>
   Ariella is huge reading fan that within the years read thousands of books and it was time to make room in the house and also a new place for all new books that should be purchased.<br/>
