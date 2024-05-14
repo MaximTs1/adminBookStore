@@ -22,7 +22,7 @@ const BookManage = () => {
   };
 
   useEffect(() => {
-    fetch("http://185.229.226.27:3001/book/get-books")
+    fetch("https://ariellasv-api.onrender.com/book/get-books")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -43,7 +43,7 @@ const BookManage = () => {
   }, []);
 
   useEffect(() => {
-    fetch("http://185.229.226.27:3001/user/all-users")
+    fetch("https://ariellasv-api.onrender.com/user/all-users")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -126,7 +126,7 @@ const BookManage = () => {
 
   const fetchBookByCustomId = (customId) => {
     setLoader(true);
-    fetch(`http://185.229.226.27:3001/book/book-by-custom-id/${customId}`)
+    fetch(`https://ariellasv-api.onrender.com/book/book-by-custom-id/${customId}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Book not found");
@@ -149,7 +149,7 @@ const BookManage = () => {
       return;
     }
     setLoader(true);
-    fetch(`http://185.229.226.27:3001/book/delete-book/${customId}`, {
+    fetch(`https://ariellasv-api.onrender.com/book/delete-book/${customId}`, {
       method: "DELETE",
     })
       .then((response) => {
