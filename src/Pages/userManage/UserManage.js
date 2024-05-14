@@ -36,7 +36,7 @@ const UserManage = () => {
   };
 
   useEffect(() => {
-    fetch("http://185.229.226.27:3001/user/all-users")
+    fetch("https://ariellasv-api.onrender.com/user/all-users")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
