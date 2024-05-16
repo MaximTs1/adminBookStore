@@ -125,7 +125,7 @@ const AddCard = () => {
 
     try {
       const response = await axios.post(
-        "http://https://ariellasv-api.onrender.com/book/add-book",
+        "https://ariellasv-api.onrender.com/book/add-book",
         bookData
       );
       alert(response.data.message);
