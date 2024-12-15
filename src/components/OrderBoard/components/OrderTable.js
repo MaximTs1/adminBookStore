@@ -109,7 +109,7 @@ export default function OrderTable({ rows }) {
     // API call to update the status
     try {
       const response = await fetch(
-        `http://185.229.226.27:3001/user/updateOrderStatus/${orderId}`,
+        `http://localhost:3001/manager/updateOrderStatus/${orderId}`,
         {
           method: "PUT",
           headers: {

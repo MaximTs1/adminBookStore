@@ -6,13 +6,19 @@ import UserManage from "./Pages/userManage/UserManage";
 import BookManage from "./Pages/BookManage/BookManage";
 // import Order from "./Pages/Order/Order";
 import Login from "./Pages/LoginPage/Login";
+import CreateAdmin from "./Pages/LoginPage/createAdminPage";
 import EditBook from "./Pages/editBook/editBook";
 import MuiOrder from "./Pages/Order/MuiOrder";
 
 export default function Router() {
   return (
     <Routes>
+
+      <Route path="/createadmin" element={<CreateAdmin />} />
+
       <Route path="/login" element={<Login />} />
+      
+
       <Route
         exact
         path="/"
@@ -22,6 +28,7 @@ export default function Router() {
           </ProtectedRoute>
         }
       />
+
       <Route
         path="/usermanage"
         element={
@@ -70,6 +77,7 @@ export default function Router() {
           </ProtectedRoute>
         }
       />
+      
     </Routes>
   );
 }

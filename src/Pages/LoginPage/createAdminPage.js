@@ -10,7 +10,6 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../AuthContext";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
@@ -18,16 +17,16 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const defaultTheme = createTheme();
 
-export default function Login() {
+export default function CreateAdmin() {
+
   const navigate = useNavigate();
-  const { setIsLoggedIn } = useAuth();
-
-  const handleCreateAdminClick = () => {
-    navigate("/createadmin");  
-  };
-
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
@@ -43,31 +42,27 @@ export default function Login() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const loginDetails = {
-      email: data.get("email"),
-      password: data.get("password"),
+    const adminDetails = {
+      email: email,
+      password: password,
     };
-    fetch("http://localhost:3001/manager/login-manager", {
-      // credentials: "include",
+    fetch("http://localhost:3001/manager/create-manager", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(loginDetails),
+      body: JSON.stringify(adminDetails),
     })
-      .then(async (response) => {
+      .then((response) => {
         if (response.ok) {
-          localStorage.setItem("isLoggedIn", "true");
-          localStorage.setItem("isLoggedIn", "true");
-          setIsLoggedIn(true);
-          navigate("/");
+          alert("Manager created successfully!");
+          navigate("/");  // Redirect to another page after successful admin creation
         } else {
-          alert("Invalid login credentials");
+          alert("Error creating admin");
         }
       })
       .catch((error) => {
-        console.error("Error during login:", error);
+        console.error("Error during admin creation:", error);
       });
   };
 
@@ -85,9 +80,7 @@ export default function Login() {
               "url(https://picsum.photos/800/600?random)",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
-              t.palette.mode === "light"
-                ? t.palette.grey[50]
-                : t.palette.grey[900],
+              t.palette.mode === "light" ? t.palette.grey[50] : t.palette.grey[900],
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
@@ -106,14 +99,9 @@ export default function Login() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign in
+              Create Admin
             </Typography>
-            <Box
-              component="form"
-              noValidate
-              onSubmit={handleSubmit}
-              sx={{ mt: 1 }}
-            >
+            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <TextField
                 name="email"
                 margin="normal"
@@ -124,6 +112,8 @@ export default function Login() {
                 label="Email Address"
                 autoComplete="email"
                 autoFocus
+                value={email}
+                onChange={handleEmailChange}
               />
               <TextField
                 name="password"
@@ -151,29 +141,14 @@ export default function Login() {
                   ),
                 }}
               />
-
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Sign In
-              </Button>
-              
-              <Button
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={handleCreateAdminClick}  // Add onClick to navigate
-              >
                 Create Admin
               </Button>
-              
-              <Grid container>
-                <Grid item xs></Grid>
-                <Grid item></Grid>
-              </Grid>
             </Box>
           </Box>
         </Grid>

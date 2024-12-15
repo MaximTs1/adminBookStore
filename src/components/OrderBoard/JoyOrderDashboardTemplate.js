@@ -19,7 +19,7 @@ export default function JoyOrderDashboardTemplate() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch("https://ariellasv-api.onrender.com/user/orders");
+        const response = await fetch("http://localhost:3001/manager/orders");
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

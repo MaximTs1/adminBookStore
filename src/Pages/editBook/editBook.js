@@ -57,7 +57,7 @@ const EditBook = () => {
     const fetchBooks = async () => {
       try {
         const response = await axios.get(
-          "https://ariellasv-api.onrender.com/book/get-books"
+          "http://localhost:3001/book/get-books"
         );
         const fetchedBooks = response.data;
 
@@ -140,7 +140,7 @@ const EditBook = () => {
 
     try {
       const response = await fetch(
-        `https://ariellasv-api.onrender.com/book/update-book/${bookData.customId}`,
+        `http://localhost:3001/book/update-book/${bookData.customId}`,
         {
           method: "PUT",
           headers: {

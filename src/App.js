@@ -22,6 +22,7 @@ function App() {
 
   const location = useLocation();
   const isLoginPage = location.pathname === "/login";
+  const isCreateAdminPage = location.pathname === "/createadmin";
 
   return (
     <AuthProvider>
@@ -33,7 +34,7 @@ function App() {
           snackbar,
         }}
       >
-        {!isLoginPage && <Sidebar />}
+        {!isLoginPage && !isCreateAdminPage && <Sidebar />}
         <div className="pages">
           <Router />
         </div>

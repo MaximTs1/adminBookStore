@@ -43,7 +43,7 @@ const AddCard = () => {
     const fetchBooks = async () => {
       try {
         const response = await axios.get(
-          "https://ariellasv-api.onrender.com/book/get-books"
+          "http://localhost:3001/book/get-books"
         );
         const fetchedBooks = response.data;
 
@@ -125,7 +125,7 @@ const AddCard = () => {
 
     try {
       const response = await axios.post(
-        "https://ariellasv-api.onrender.com/book/add-book",
+        "http://localhost:3001/book/add-book",
         bookData
       );
       alert(response.data.message);
